@@ -150,5 +150,6 @@ if numdays>1
     end
 end
 
+!del coawst_clm_*.nc
+!del coawst_bdy_*.nc
 toc
-

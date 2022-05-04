@@ -475,5 +475,5 @@ if get_Wind
   ncwrite(nc,'Uwind',Uwind);
   ncwrite(nc,'Vwind',Vwind);
 end
-
+!del *.gbx8
 disp(['------------ wrote ',roms_force_name,' ------------']);

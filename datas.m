@@ -1,5 +1,5 @@
 start=[2018,1,1,0,0,0];
-stop=[2018,1,30,0,0,0];
+stop=[2018,3,1,0,0,0];
 project_dir='C:\Users\autod\Desktop\bh';
 roms_force_ncep_source_dir="ncep";
 roms_grid_name='roms_grid.nc';
