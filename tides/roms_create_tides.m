@@ -14,7 +14,7 @@
 %           - remove tri dependency, use TriScatteredInterp instead
 %
 % Requires: T_TIDE and TIDAL_ELLIPSE packages 
- datas
+ configs
 %%%%% BEGINNING of USER-MODIFIED SECTION %%%%%
 IPLOT=1;            % 1 to make plots, 0 for no plots
 IWRITE=1;           % 1 to write output to netcdf, 0 for no output

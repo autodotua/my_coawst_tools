@@ -1,4 +1,4 @@
-datas
+configs
 netcdf_load(roms_grid_name) 
 netcdf_load(path_ETOPO1_Bed_c_gmt4)
 xl=lng_range(1); xr=lng_range(2);

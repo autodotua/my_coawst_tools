@@ -21,7 +21,7 @@
 %
 
 %%%%%%%%%%%%%%%%%%%%%   START OF USER INPUT  %%%%%%%%%%%%%%%%%%%%%%%%%%
-datas
+configs
 
 % (1) Enter start date (T1) and number of days to get climatology data 
 T1 = datenum(start); %start date
@@ -32,7 +32,7 @@ dayFrequency = 1;
 
 % (2) Enter URL of the HYCOM catalog for the requested time, T1
 %     see http://tds.hycom.org/thredds/catalog.html
-url = 'http://tds.hycom.org/thredds/dodsC/GLBa0.08/expt_91.2';      % 2011-01 to 2013-08
+url = url_hycom;      % 2011-01 to 2013-08
 
 % (3) Enter working directory (wdr)
 wdr = project_dir;
@@ -41,12 +41,7 @@ wdr = project_dir;
 modelgrid = roms_grid_name;
 
 % (5) Enter grid vertical coordinate parameters --These need to be consistent with the ROMS setup. 
-theta_s     =  1.0;
-theta_b     =  0.4;
-Tcline      = 1.0;
-N           = 16;
-Vtransform  =  1;
-Vstretching =  1;
+
 
 %%%%%%%%%%%%%%%%%%%%%   END OF USER INPUT  %%%%%%%%%%%%%%%%%%%%%%%%%%
 eval(['cd ',wdr])

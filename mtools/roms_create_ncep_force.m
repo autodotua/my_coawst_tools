@@ -50,7 +50,7 @@
 % is now https:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%  START OF USER INPUT  %%%%%%%%%%%%%%%%%%%%%%%%%%
-datas
+configs
 cd(project_dir)
 % (1) 选择想要输出到ROMS强迫场的变量.
 % put a '1' if you want to include it, '0' otherwise.

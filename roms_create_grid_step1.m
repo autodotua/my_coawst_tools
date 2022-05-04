@@ -1,4 +1,4 @@
-datas
+configs
 
 netcdf_load('wrfinput_d01') %会加载所有变量到工作区
 figure %生成绘图窗口
