@@ -308,7 +308,7 @@ switch lower(grid_file)
     extract_coast=false;               % extract coastlines from GSHHS
     got_matfile=false;                 % coastline from provided .mat file
 
-    Cfile=which('gshhs_h.b','-ALL');   % select first directory found
+    Cfile=which('gshhs_f.b','-ALL');   % select first directory found
 
     switch numel(varargin)
       case 0
@@ -330,29 +330,11 @@ switch lower(grid_file)
             end
             got_matfile=true;
           else
-            database=varargin{1};
-            switch database
-              case 'f'                        % full resolution
-                name='gshhs_f.b';
-              case 'h'                        % high resolution
-                name='gshhs_h.b';
-              case 'i'                        % intermediate resolution
-                name='gshhs_i.b';
-              case 'l'                        % low resolution
-                name='gshhs_l.b';
-              case 'c'                        % crude resolution
-                name='gshhs_c.b';
-              otherwise
-                error(['illegal GSHHS dataset resolution, ',database])
-            end
-%           if (~isempty(DIR))
-            if (~isempty(Cfile))
-              DIR=fileparts(Cfile{1});           % others are shadowed
-              Cname=fullfile(DIR, name);      % selected GSHHS resolution
+              database=varargin{1};
+              datas
+              Cname=path_gshhs_f;
               extract_coast=true;
-            else
-              error(['Cannot find directory for: ', name]);
-            end
+          
           end
         elseif (isnumeric(varargin{1}))
           C.lon=varargin{1};                  % provide coastline longitude

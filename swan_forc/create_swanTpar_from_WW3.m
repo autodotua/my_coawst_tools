@@ -12,19 +12,19 @@
 % 1) Enter WORKING DIRECTORY.
 % This is the location where the forcing files to be created.
 %
-working_dir='E:\data\models\COAWST'
+working_dir='C:\Users\autod\Desktop\maria'
 
 % 2) Enter the year and month of the data requested.
-yearww3='2012';    %input year of data yyyy 
-mmww3='10';        %input month of data mm
+yearww3='2018';    %input year of data yyyy 
+mmww3='07';        %input month of data mm
 %
 
 % 3) Enter path\name of SWAN grid. This is set up to use the roms grid as the same for swan.
-modelgrid='E:\data\models\COAWST\Projects\Sandy\Sandy_roms_grid.nc';
+modelgrid='C:\Users\autod\Desktop\maria\roms_grid.nc';
 
 % 4) Enter the spacings of the forcing file locations around the perimeter
 % of the grid. One forcings file spans between the 'specres' points.
-specres=20; % spec point resolution
+specres=40; % spec point resolution
 
 % 5)
 % Enter the WW3 grid:

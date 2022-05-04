@@ -10,11 +10,19 @@ else
   eval(['tpurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/gribs/multi_1.',ww3_grid,'.tp.',yearww3,mmww3,'.grb2'';'])
   eval(['dpurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/gribs/multi_1.',ww3_grid,'.dp.',yearww3,mmww3,'.grb2'';'])
 end
+
+%修改为本地路径
+tpurl="C:\Users\autod\Desktop\maria\multi_1.glo_30m.tp.201807.nc"
+hsurl="C:\Users\autod\Desktop\maria\multi_1.glo_30m.hs.201807.nc"
+dpurl="C:\Users\autod\Desktop\maria\multi_1.glo_30m.dp.201807.nc"
+
 %
 %first lets get the lon, lat, and time of the ww3 data
 disp(' getting ww3 lon lat and time')
-lonww3_1d=double(ncread(hsurl,'lon'));  zlon=length(lonww3_1d);
-latww3_1d=double(ncread(hsurl,'lat'));  zlat=length(latww3_1d);
+lonww3_1d=double(ncread(hsurl,'longitude'));%修改变量
+zlon=length(lonww3_1d);
+latww3_1d=double(ncread(hsurl,'latitude'));%修改变量
+zlat=length(latww3_1d);
 %latww3_1d=flipud(latww3_1d);
 lonww3=repmat(lonww3_1d,1,zlat);
 latww3=repmat(latww3_1d,1,zlon)';
@@ -22,10 +30,16 @@ latww3=repmat(latww3_1d,1,zlon)';
 %
 timeww3=ncread(hsurl,'time');   % Hour since the start of the month, this includes first hour of next month so
 timeww3=timeww3(1:end-1);       % we will stop 1 short to not allow double count of end of this month and start of next.
+
+index=0
 %
 % put time in a datenum format
 for mm=1:length(timeww3)
-  time(mm)=datenum(str2num(yearww3),str2num(mmww3),1,timeww3(mm),0,0);
+    %重新设置时间
+    timeww3(mm)=index;
+    index=index+1;
+    %增加*3，设置时间分辨率为3个小时
+    time(mm)=datenum(str2num(yearww3),str2num(mmww3),1,timeww3(mm)*3,0,0);
 end
 %
 % Now prep the swan/roms grid location arrays
@@ -55,33 +69,33 @@ for tidx=1:length(timeww3)
 %
   disp(['getting hs tp and dp for ',datestr(time(tidx),'yyyymmdd.HHMM')])
 % get hs
-  hs=double(squeeze(ncread(hsurl,'Significant_height_of_combined_wind_waves_and_swell_surface',[ig0 jg0 tidx],[ig1-ig0+1 jg1-jg0+1 1])));
+  hs=double(squeeze(ncread(hsurl,'HTSGW_surface',[ig0 jg0 tidx],[ig1-ig0+1 jg1-jg0+1 1])));%修改变量
   zz=hs>1000;
   hs(zz)=0; %make bad data 0, swan not like NaNs
   hs(isnan(hs))=0;
 % get tp
-  tp=double(squeeze(ncread(tpurl,'Primary_wave_mean_period_surface',[ig0 jg0 tidx],[ig1-ig0+1 jg1-jg0+1 1])));
+  tp=double(squeeze(ncread(tpurl,'PERPW_surface',[ig0 jg0 tidx],[ig1-ig0+1 jg1-jg0+1 1])));%修改变量
   zz=tp>1000;
   tp(zz)=0; %make bad data 0, swan not like NaNs
   tp(isnan(tp))=0;
 % get dp
-  dp=double(squeeze(ncread(dpurl,'Primary_wave_direction_surface',[ig0 jg0 tidx],[ig1-ig0+1 jg1-jg0+1 1])));
+  dp=double(squeeze(ncread(dpurl,'DIRPW_surface',[ig0 jg0 tidx],[ig1-ig0+1 jg1-jg0+1 1])));%修改变量
   zz=dp>1000;
   dp(zz)=0; %make bad data 0, swan not like NaNs
   dp(isnan(dp))=0;
 %
 % interpolate hs
-  FCr = griddedInterpolant(daplon,fliplr(daplat),fliplr(hs),method);
+  FCr = griddedInterpolant(daplon,daplat,hs,method);%去除fliplr
   HS(:,tidx)=FCr(gx,gy);
 % interpolate tp
-  FCr.Values=fliplr(tp);
+  FCr.Values=tp;%去除fliplr
   TP(:,tidx)=FCr(gx,gy); 
 % interpolate dp
   Dwave_Ax=1*cos((90-double(dp))*pi/180);%grid of x
   Dwave_Ay=1*sin((90-double(dp))*pi/180);%grid of y
-  FCr.Values=fliplr(Dwave_Ax);
+  FCr.Values=Dwave_Ax;%去除fliplr
   Zx(:)=FCr(gx,gy);
-  FCr.Values=fliplr(Dwave_Ay);
+  FCr.Values=Dwave_Ay;%去除fliplr
   Zy(:)=FCr(gx,gy);
   Z=90. - atan2(Zy,Zx)*180./pi; %calculate direction
   if Z<0
