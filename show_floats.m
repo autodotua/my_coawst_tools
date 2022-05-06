@@ -1,7 +1,7 @@
 file='ocean_flt.nc';
 groups=ones(6)*20;
 
-datas
+configs
 netcdf_load(roms_grid_name);
 netcdf_load(file);
 figure

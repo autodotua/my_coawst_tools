@@ -21,6 +21,7 @@ roms_climatology_name = 'roms_clm.nc';
 roms_initialization_name = 'roms_ini.nc';
 roms_boundary_name = 'roms_bdy.nc';
 roms_tides_name = 'roms_tides.nc';
+roms_rivers_name='roms_rivers.nc';
 
 %数据文件路径
 project_dir='C:\Users\autod\Desktop\bh';

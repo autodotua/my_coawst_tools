@@ -26,26 +26,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Begin user input section                                %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+configs
 %1) Enter name of netcdf forcing file to be created.
 %   If it already exists it will be overwritten!!.
-    forc_file='hudson_rivers.nc';
+    forc_file='roms_rivers.nc';
 
 %2) Enter times of river forcings data, in seconds.
 %   This time needs to be consistent with model time (ie dstart and time_ref).
 %   See *.in files for more detail. 
-     river_time=[734682:1/24:734682+3];      % 3 days -- NEEDS to be in your time code.
+     river_time=[58119:1/24:58219];      % 3 days -- NEEDS to be in your time code.
 %
      num_river_times=length(river_time);     % do not change this.
 
-%3) Enter number of vertical sigma levels in model.
-%   This will be same value as entered in mod_param.F
-    N=16;
-
-%4) Enter the values of theta_s, theta_b, and Tcline from your *.in file.
-    theta_s = 1;  
-    theta_b = 1;  
-    Tcline =  0;  
 
 %5) Enter value of h, Lm, and Mm.
 %   This info can come from a grid file or user supplied here.
@@ -54,7 +46,7 @@
     get_grid = 1;    %<--- put a 1 or 0 here
   
     if (get_grid)
-      grid_file='e:\data\hudson\roms\forcings\hudson_grd1000.nc'    %<-enter name of grid here
+      grid_file=roms_grid_name;    %<-enter name of grid here
 %
 % Get some grid info, do not change this.
 % 
@@ -128,7 +120,7 @@
     end
 
 %6) Enter number of rivers.
-   num_rivers=7;
+   num_rivers=1;
 
 %7) Initialize river location and direction parameters.
 %   Currently, the direction can be along XI-direction
@@ -136,9 +128,9 @@
 %   located at U- or V-points so the grid locations should range from
 %   1 =< river_Xposition =< L  and  1 =< river_Eposition =< M
 % 
-    river_Xposition=[  31   56    7   64    4   8  77];   % num_rivers
-    river_Eposition=[1758 1621 1557 1545 1462 1418 508];  % num_rivers
-    river_direction=[0 0 0 0 0 0 0];      % num_rivers values
+    river_Xposition=[ 41];   % num_rivers
+    river_Eposition=[67];  % num_rivers
+    river_direction=[0];      % num_rivers values
 
 %8) Initialize river shape.
     for i=1:num_rivers
