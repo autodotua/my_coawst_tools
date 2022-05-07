@@ -29,14 +29,14 @@
 configs
 %1) Enter name of netcdf forcing file to be created.
 %   If it already exists it will be overwritten!!.
-    forc_file='roms_rivers.nc';
+    forc_file=roms_rivers_name;
 
 %2) Enter times of river forcings data, in seconds.
 %   This time needs to be consistent with model time (ie dstart and time_ref).
 %   See *.in files for more detail. 
-     river_time=[58119:1/24:58219];      % 3 days -- NEEDS to be in your time code.
+     ocean_time=[58119:1/1:58177];      % 3 days -- NEEDS to be in your time code.
 %
-     num_river_times=length(river_time);     % do not change this.
+     num_ocean_times=length(ocean_time);     % do not change this.
 
 
 %5) Enter value of h, Lm, and Mm.
@@ -47,9 +47,6 @@ configs
   
     if (get_grid)
       grid_file=roms_grid_name;    %<-enter name of grid here
-%
-% Get some grid info, do not change this.
-% 
       netcdf_load(grid_file);
       [LP,MP]=size(h);
       Lm=LP-2;
@@ -128,8 +125,8 @@ configs
 %   located at U- or V-points so the grid locations should range from
 %   1 =< river_Xposition =< L  and  1 =< river_Eposition =< M
 % 
-    river_Xposition=[ 41];   % num_rivers
-    river_Eposition=[67];  % num_rivers
+    river_Xposition=[ 81];   % num_rivers
+    river_Eposition=[87];  % num_rivers
     river_direction=[0];      % num_rivers values
 
 %8) Initialize river shape.
@@ -141,10 +138,10 @@ configs
 
 %9) Initialize river flow.
 %     river_transport=river_flow; %read in from file
-      river_transport=ones(num_rivers,num_river_times);
+      river_transport=ones(num_rivers,num_ocean_times);
 
 %10) Time series of river temp and salt.
-    for time=1:num_river_times
+    for time=1:num_ocean_times
       for k=1:N
         for i=1:num_rivers
           river_temp(i,k,time)=10;
@@ -194,7 +191,7 @@ configs
   for idmud=1:NCS
     count=['0',num2str(idmud)];
     count=count(end-1:end);
-    for time=1:num_river_times
+    for time=1:num_ocean_times
       for k=1:N
         for i=1:num_rivers
           eval(['river_mud_',count,'(i,k,time) = 0;'])               %mud conc in water column
@@ -208,7 +205,7 @@ configs
   for isand=1:NNS
     count=['0',num2str(isand)];
     count=count(end-1:end);
-    for time=1:num_river_times
+    for time=1:num_ocean_times
       for k=1:N
         for i=1:num_rivers
           eval(['river_sand_',count,'(i,k,time) = 0;'])               %sand conc in water column
@@ -251,7 +248,7 @@ s_rhodimID = netcdf.defDim(nc_forc,'s_rho',N);
 s_wdimID = netcdf.defDim(nc_forc,'s_w',N+1);
 tracerdimID = netcdf.defDim(nc_forc,'tracet',NT);
 riverdimID = netcdf.defDim(nc_forc,'river',num_rivers);
-river_timedimID = netcdf.defDim(nc_forc,'river_time',num_river_times);
+ocean_timedimID = netcdf.defDim(nc_forc,'ocean_time',num_ocean_times);
 onedimID = netcdf.defDim(nc_forc,'one',1);
 
 %% Variables and attributes:
@@ -306,69 +303,69 @@ netcdf.putAtt(nc_forc,river_ID,'long_name','river_runoff identification number')
 netcdf.putAtt(nc_forc,river_ID,'units','nondimensional');
 netcdf.putAtt(nc_forc,river_ID,'field','num_rivers, scalar, series');
 
-river_timeID = netcdf.defVar(nc_forc,'river_time','double',river_timedimID);
-netcdf.putAtt(nc_forc,river_timeID,'long_name','river time');
-netcdf.putAtt(nc_forc,river_timeID,'units','days');
-netcdf.putAtt(nc_forc,river_timeID,'field','river_time, scalar, series');
+ocean_timeID = netcdf.defVar(nc_forc,'ocean_time','double',ocean_timedimID);
+netcdf.putAtt(nc_forc,ocean_timeID,'long_name','ocean time');
+netcdf.putAtt(nc_forc,ocean_timeID,'units','days since 1858-11-17 00:00:00 UTC');
+netcdf.putAtt(nc_forc,ocean_timeID,'field','ocean_time, scalar, series');
 
 river_XpositionID = netcdf.defVar(nc_forc,'river_Xposition','double',riverdimID);
 netcdf.putAtt(nc_forc,river_XpositionID,'long_name','river runoff  XI-positions at RHO-points');
 netcdf.putAtt(nc_forc,river_XpositionID,'units','scalar');
-netcdf.putAtt(nc_forc,river_XpositionID,'time','river_time');
+netcdf.putAtt(nc_forc,river_XpositionID,'time','ocean_time');
 netcdf.putAtt(nc_forc,river_XpositionID,'field','river runoff XI position, scalar, series');
 
 river_EpositionID = netcdf.defVar(nc_forc,'river_Eposition','double',riverdimID);
 netcdf.putAtt(nc_forc,river_EpositionID,'long_name','river runoff  ETA-positions at RHO-points');
 netcdf.putAtt(nc_forc,river_EpositionID,'units','scalar');
-netcdf.putAtt(nc_forc,river_EpositionID,'time','river_time');
+netcdf.putAtt(nc_forc,river_EpositionID,'time','ocean_time');
 netcdf.putAtt(nc_forc,river_EpositionID,'field','river runoff ETA position, scalar, series');
 
 river_directionID = netcdf.defVar(nc_forc,'river_direction','double',riverdimID);
 netcdf.putAtt(nc_forc,river_directionID,'long_name','river runoff direction, XI=0, ETA>0');
 netcdf.putAtt(nc_forc,river_directionID,'units','scalar');
-netcdf.putAtt(nc_forc,river_directionID,'time','river_time');
+netcdf.putAtt(nc_forc,river_directionID,'time','ocean_time');
 netcdf.putAtt(nc_forc,river_directionID,'field','river runoff direction, scalar, series');
 
 river_VshapeID = netcdf.defVar(nc_forc,'river_Vshape','double',[riverdimID s_rhodimID]);
 netcdf.putAtt(nc_forc,river_VshapeID,'long_name','river runoff mass transport vertical profile');
 netcdf.putAtt(nc_forc,river_VshapeID,'units','scalar');
-netcdf.putAtt(nc_forc,river_VshapeID,'time','river_time');
+netcdf.putAtt(nc_forc,river_VshapeID,'time','ocean_time');
 netcdf.putAtt(nc_forc,river_VshapeID,'field','river runoff vertical profile, scalar, series');
 
-river_transportID = netcdf.defVar(nc_forc,'river_transport','double',[riverdimID river_timedimID]);
+river_transportID = netcdf.defVar(nc_forc,'river_transport','double',[riverdimID ocean_timedimID]);
 netcdf.putAtt(nc_forc,river_transportID,'long_name','river runoff mass transport');
 netcdf.putAtt(nc_forc,river_transportID,'units','meter^3/s');
-netcdf.putAtt(nc_forc,river_transportID,'time','river_time');
+netcdf.putAtt(nc_forc,river_transportID,'time','ocean_time');
 netcdf.putAtt(nc_forc,river_transportID,'field','river runoff mass transport, scalar, series');
 
-river_tempID = netcdf.defVar(nc_forc,'river_temp','double',[riverdimID s_rhodimID river_timedimID]);
+river_tempID = netcdf.defVar(nc_forc,'river_temp','double',[riverdimID s_rhodimID ocean_timedimID]);
 netcdf.putAtt(nc_forc,river_tempID,'long_name','river runoff potential temperature');
 netcdf.putAtt(nc_forc,river_tempID,'units','Celsius');
-netcdf.putAtt(nc_forc,river_tempID,'time','river_time');
+netcdf.putAtt(nc_forc,river_tempID,'time','ocean_time');
 netcdf.putAtt(nc_forc,river_tempID,'field','river temperature, scalar, series');
 
-river_saltID = netcdf.defVar(nc_forc,'river_salt','double',[riverdimID s_rhodimID river_timedimID]);
+river_saltID = netcdf.defVar(nc_forc,'river_salt','double',[riverdimID s_rhodimID ocean_timedimID]);
 netcdf.putAtt(nc_forc,river_saltID,'long_name','river runoff salinity');
 netcdf.putAtt(nc_forc,river_saltID,'units','PSU');
-netcdf.putAtt(nc_forc,river_saltID,'time','river_time');
+netcdf.putAtt(nc_forc,river_saltID,'time','ocean_time');
 netcdf.putAtt(nc_forc,river_saltID,'field','river salinity, scalar, series');
  
 for mm=1:NCS
   count=['00',num2str(mm)];
   count=count(end-1:end);
-  eval(['river_mud_',count,'ID = netcdf.defVar(nc_forc,''river_mud_',count,''',''double'',[riverdimID s_rhodimID river_timedimID]);'])
+  eval(['river_mud_',count,'ID = netcdf.defVar(nc_forc,''river_mud_',count,''',''double'',[riverdimID s_rhodimID ocean_timedimID]);'])
   eval(['netcdf.putAtt(nc_forc,river_mud_',count,'ID,''long_name'',''river runoff suspended sediment concentration, size class ',count,''');'])
   eval(['netcdf.putAtt(nc_forc,river_mud_',count,'ID,''units'',''kilogram meter-3'');'])
-  eval(['netcdf.putAtt(nc_forc,river_mud_',count,'ID,''time'',''river_time'');'])
+  eval(['netcdf.putAtt(nc_forc,river_mud_',count,'ID,''time'',''ocean_time'');'])
   eval(['netcdf.putAtt(nc_forc,river_mud_',count,'ID,''field'',''river runoff mud_',count,', scalar, series'');'])    
 end
 for mm=1:NNS
   count=['00',num2str(mm)];
   count=count(end-1:end);
-  eval(['river_sand_',count,'ID = netcdf.defVar(nc_forc,''river_sand_',count,''',''double'',[riverdimID s_rhodimID river_timedimID]);'])
+  eval(['river_sand_',count,'ID = netcdf.defVar(nc_forc,''river_sand_',count,''',''double'',[riverdimID s_rhodimID ocean_timedimID]);'])
   eval(['netcdf.putAtt(nc_forc,river_sand_',count,'ID,''long_name'',''river runoff suspended sediment concentration, size class ',count,''');'])
   eval(['netcdf.putAtt(nc_forc,river_sand_',count,'ID,''units'',''kilogram meter-3'');'])
-  eval(['netcdf.putAtt(nc_forc,river_sand_',count,'ID,''time'',''river_time'');'])
+  eval(['netcdf.putAtt(nc_forc,river_sand_',count,'ID,''time'',''ocean_time'');'])
   eval(['netcdf.putAtt(nc_forc,river_sand_',count,'ID,''field'',''river runoff sand_',count,', scalar, series'');'])    
 end
 netcdf.close(nc_forc)
@@ -386,7 +383,7 @@ ncwrite(forc_file,'sc_r',sc_r);
 ncwrite(forc_file,'hc',hc);
 ncwrite(forc_file,'river',[1:num_rivers]);
 
-ncwrite(forc_file,'river_time',river_time);
+ncwrite(forc_file,'ocean_time',ocean_time);
 ncwrite(forc_file,'river_Xposition',river_Xposition);
 ncwrite(forc_file,'river_Eposition',river_Eposition);
 ncwrite(forc_file,'river_direction',river_direction);

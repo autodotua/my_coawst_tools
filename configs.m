@@ -30,3 +30,6 @@ path_gshhs_f='data/gshhs_f.b';
 path_tpx_uv='data/tpx_uv.mat';
 path_tpx_h='data/tpx_h.mat';
 url_hycom='http://tds.hycom.org/thredds/dodsC/GLBa0.08/expt_91.2';
+
+%河流参数
+river_count=1;

@@ -160,7 +160,7 @@ if get_Wind
   wt_dimID = netcdf.defDim(nc,'wind_time',ntimes);
   wtID = netcdf.defVar(nc,'wind_time','double',wt_dimID);
   netcdf.putAtt(nc,wtID,'long_name','wind_time');
-  netcdf.putAtt(nc,wtID,'units','days since 1858-11-17 00:00:00 UTC');
+  netcdf.putAtt(nc,wtID,'units','ocean_time');
   %改为你的ROMS时间基准，下面的都要注意
   netcdf.putAtt(nc,wtID,'field','wind_time, scalar, series');
 
