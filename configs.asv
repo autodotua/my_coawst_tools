@@ -1,0 +1,68 @@
+%% 用户配置部分
+
+%时间
+roms.time.start=[2018,1,1,0,0,0];
+roms.time.stop=[2018,3,1,0,0,0];
+
+%网格
+roms.grid.longitude=[117,122.5];
+roms.grid.latitude=[37,41];
+roms.grid.size=[220,160];
+roms.grid.theta_s     =  1.0;
+roms.grid.theta_b     =  0.4;
+roms.grid.Tcline      = 1.0;
+roms.grid.N           = 16;
+roms.grid.Vtransform  =  1;
+roms.grid.Vstretching =  1;
+
+%输出
+roms.project_dir='C:\Users\autod\Desktop\bh';
+roms.nc.grid='roms_grid.nc';
+roms.nc.force = 'roms_frc.nc';
+roms.nc.climatology = 'roms_clm.nc';
+roms.nc.initialization = 'roms_ini.nc';
+roms.nc.boundary = 'roms_bdy.nc';
+roms.nc.tides = 'roms_tides.nc';
+roms.nc.rivers='roms_rivers.nc';
+
+%数据文件路径
+roms.res.force_ncep_dir="ncep";
+roms.res.ETOPO1_Bed_c_gmt4='data/ETOPO1_Bed_c_gmt4.grd';
+roms.res.gshhs_f='data/gshhs_f.b';
+roms.res.tpx_uv='data/tpx_uv.mat';
+roms.res.tpx_h='data/tpx_h.mat';
+roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBa0.08/expt_91.2';
+
+%河流
+roms.rivers.count=2;
+roms.rivers.location=[81,87;90,80];
+roms.rivers.direction=[0,0];
+roms.rivers.v_shape=ones(roms.rivers.count,roms.grid.N)/roms.grid.N;
+roms.rivers.time=[0,10,20];
+roms.rivers.transport=[10,10,10;20,20,20];
+temp=ones(2)
+roms.rivers.temp=[10,10,10;20,20,20];
+roms.rivers.salt=[10,10,10;20,20,20];
+roms.rivers.dye={[10,10,10;20,20,20]};
+
+% 被动示踪剂
+roms.tracer.count=2;
+data1=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
+for i=144:146
+    for j=74:76
+        data1(i,j,:)=1;
+    end
+end
+
+data2=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
+for i=95:98
+    for j=70:74
+        data2(i,j,:)=1;
+    end
+end
+roms.tracer.densities={data1,data2};
+
+%% 数据处理和验证
+
+roms.time.start_julian=juliandate(datetime(roms.time.start),'modifiedjuliandate');
+roms.time.stop_julian=juliandate(datetime(roms.time.stop),'modifiedjuliandate');

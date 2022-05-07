@@ -331,8 +331,8 @@ switch lower(grid_file)
             got_matfile=true;
           else
               database=varargin{1};
-              datas
-              Cname=path_gshhs_f;
+              configs
+              Cname=roms.res.gshhs_f;
               extract_coast=true;
           
           end

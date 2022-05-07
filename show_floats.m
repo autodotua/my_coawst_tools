@@ -2,7 +2,7 @@ file='ocean_flt.nc';
 groups=ones(6)*20;
 
 configs
-netcdf_load(roms_grid_name);
+netcdf_load(roms.nc.grid);
 netcdf_load(file);
 figure
 pcolorjw(lon_rho,lat_rho,h);

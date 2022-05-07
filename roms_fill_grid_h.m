@@ -1,8 +1,11 @@
 configs
-netcdf_load(roms_grid_name) 
-netcdf_load(path_ETOPO1_Bed_c_gmt4)
-xl=lng_range(1); xr=lng_range(2);
-yb= lat_range(1); yt= lat_range(2);
+netcdf_load(roms.nc.grid) 
+netcdf_load(roms.res.ETOPO1_Bed_c_gmt4)
+xl=roms.grid.longitude(1); xr=roms.grid.longitude(2);
+yb= roms.grid.latitude(1); yt= roms.grid.latitude(2);
+numx=roms.grid.size(1)+1; numy=roms.grid.size(2)+1;
+dx=(xr-xl)/numx; dy=(yt-yb)/numy; %x和y的分辨率
+[lon, lat]=meshgrid(xl:dx:xr, yb:dy:yt);
 
 [x2,y2]=meshgrid(x((179+xl)*60:(181+xr)*60),y((89+yb)*60:(91+yt)*60));
 z2=-z((179+xl)*60:(181+xr)*60,(89+yb)*60:(91+yt)*60)';
@@ -13,7 +16,7 @@ h(isnan(h))=5; %把左上角的空缺区域赋值为5
 %进行一定的插值
 h(2:end-1,2:end-1)=0.2*(h(1:end-2,2:end-1)+h(2:end-1,2:end-1)+h(3:end,2:end-1)+h(2:end-1,1:end-2)+h(2:end-1,3:end)); 
 h(mask_rho==0)=1;
-ncwrite(roms_grid,'h',h); 
+ncwrite(roms.nc.grid,'h',h); 
 %下面都是画图
 figure 
 pcolorjw(lon_rho,lat_rho,h) 

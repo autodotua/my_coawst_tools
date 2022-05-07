@@ -1,15 +1,15 @@
 configs
 
-nc = netcdf.create(roms_rivers_name,'nc_clobber');
+nc = netcdf.create(roms.nc.rivers,'nc_clobber');
 
 % global variables
 netcdf.putAtt(nc,netcdf.getConstant('NC_GLOBAL'),'type', 'ROMS FORCING file');
-netcdf.putAtt(nc,netcdf.getConstant('NC_GLOBAL'),'grd_file',roms_grid_name );
+netcdf.putAtt(nc,netcdf.getConstant('NC_GLOBAL'),'grd_file',roms.nc.grid );
 netcdf.putAtt(nc,netcdf.getConstant('NC_GLOBAL'),'title','rivers');
 
 % dimensions
-s_rho_id = netcdf.defDim(nc,'s_rho',N);
-river_id = netcdf.defDim(nc,'river',river_count);
+s_rho_id = netcdf.defDim(nc,'s_rho',roms.grid.N);
+river_id = netcdf.defDim(nc,'river',roms.rivers.count);
 river_time_id = netcdf.defDim(nc,'river_time',netcdf.getConstant('NC_UNLIMITED'));
 
 % variables and attributes
@@ -26,13 +26,13 @@ netcdf.putAtt(nc,id,'long_name','river runoff identification number');
 id = netcdf.defVar(nc,'river_Xposition','double',river_id);
 netcdf.putAtt(nc,id,'long_name','river XI-position at RHO-points');
 netcdf.putAtt(nc,id,'valid_min',0);
-netcdf.putAtt(nc,id,'valid_max',grid_size(1));
+netcdf.putAtt(nc,id,'valid_max',roms.grid.size(1));
 
 
 id = netcdf.defVar(nc,'river_Eposition','double',river_id);
 netcdf.putAtt(nc,id,'long_name','river ETA-position at RHO-points');
 netcdf.putAtt(nc,id,'valid_min',0);
-netcdf.putAtt(nc,id,'valid_max',grid_size(2));
+netcdf.putAtt(nc,id,'valid_max',roms.grid.size(2));
 
 id = netcdf.defVar(nc,'river_direction','double',river_id);
 netcdf.putAtt(nc,id,'long_name','river runoff direction');
@@ -56,33 +56,29 @@ id = netcdf.defVar(nc,'river_salt','double',[river_id,s_rho_id,river_time_id]);
 netcdf.putAtt(nc,id,'long_name','river runoff salinity');
 netcdf.putAtt(nc,id,'time','river_time');
 
-id = netcdf.defVar(nc,'river_dye_01','double',[river_id,s_rho_id,river_time_id]);
-netcdf.putAtt(nc,id,'long_name','river_dye_01');
-netcdf.putAtt(nc,id,'time','river_time');
+for i=1:numel(roms.rivers.dye)
+    var_name=['river_dye_',num2str(i,'%02d')];
+    id = netcdf.defVar(nc,var_name,'double',[river_id,s_rho_id,river_time_id]);
+    netcdf.putAtt(nc,id,'long_name',var_name);
+    netcdf.putAtt(nc,id,'time','river_time');
+end
 
 netcdf.close(nc)
 
 
-roms.river.locations={[81,87]};
-data=[1];
-ncwrite(roms_rivers_name,'river',data);
-data=[0];
-ncwrite(roms_rivers_name,'river_direction',data);
-data=zeros(1,N);
-data(1,:)=1/N;
-ncwrite(roms_rivers_name,'river_Vshape',data)
-ncwrite(roms_rivers_name,'river_Xposition',81)
-ncwrite(roms_rivers_name,'river_Eposition',87)
-time_count=2;
-data=[58119,58119+10];
-ncwrite(roms_rivers_name,'river_time',data);
-data=zeros(1,time_count);
-data(1,:)=[10000,20000];
-ncwrite(roms_rivers_name,'river_transport',data);
-data=zeros(1,N,time_count);
-data(1,:,1)=10;
-data(1,:,2)=20;
 
-ncwrite(roms_rivers_name,'river_salt',data);
-ncwrite(roms_rivers_name,'river_dye_01',data);
+ncwrite(roms.nc.rivers,'river',[1:roms.rivers.count]);
+ncwrite(roms.nc.rivers,'river_direction',roms.rivers.direction);
+ncwrite(roms.nc.rivers,'river_Vshape',roms.rivers.v_shape)
+ncwrite(roms.nc.rivers,'river_Xposition',roms.rivers.location(:,1))
+ncwrite(roms.nc.rivers,'river_Eposition',roms.rivers.location(:,2))
+ncwrite(roms.nc.rivers,'river_time',roms.rivers.time+roms.time.start_julian);
+ncwrite(roms.nc.rivers,'river_transport',roms.rivers.transport);
+ncwrite(roms.nc.rivers,'river_salt',roms.rivers.salt);
+ncwrite(roms.nc.rivers,'river_temp',roms.rivers.temp);
+
+for i=1:numel(roms.rivers.dye)
+    var_name=['river_dye_',num2str(i,'%02d')];
+    ncwrite(roms.nc.rivers,var_name,roms.rivers.dye{i});
+end
 
