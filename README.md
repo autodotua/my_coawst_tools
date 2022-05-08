@@ -1,4 +1,7 @@
-# my_coawst_tools
+# 介绍
+
+COAWST TOOLS
+
 基于COAWST模式附带的工具包，根据自己所需做出相应修改。
 
 mfiles目录下是一组Matlab的预处理/后处理工具
@@ -11,28 +14,103 @@ mfiles目录下是一组Matlab的预处理/后处理工具
 | 目录名       | 内容                                                         |
 | ------------ | ------------------------------------------------------------ |
 | inwave_tools | 正在开发                                                     |
-| m_map        | 转换经纬度到米，支持不同的投影，用于网格生成                 |
+| m_map        | 地图的绘制等                                                 |
 | mtools       | ROMS创建网格、加载NC文件、将网格转为scrip、从ROMS网格创建WRF网格等工具 |
 | roms_clm     | 创建边界、初始文件、气候文件等。主驱动文件是roms_master_climatology_coawst_mw.m |
 | rutgers      | 来自Rutgers的水深测量、边界、海岸线、强迫、网格、陆地掩膜、 netcdf、海水、和实用文件夹 |
 | swan_forc    | 读取WW3 Grib2文件并创建SWAN Trap强迫文件，主驱动文件是ww3_swan_input.m |
 | tides        | 为ROMS创建潮汐强迫                                           |
 
+## 更改
 
+- 本项目将多个文件中分散的配置进行了综合，使用`config.m`文件进行统一管理
 
-## WRF
+- 增加或修复了部分工具，例如添加河流文件、增加初始场示踪剂等。
+
+# 配置文件
+
+在进行一切操作之前，首先需要编辑配置文件`configs.m`。
+
+## roms.time：时间
+
+| 用户输入 | 子配置项       | 含义                 | 格式                         |
+| -------- | -------------- | -------------------- | ---------------------------- |
+| √        | `start`        | 开始时间             | `int[6]`，分别为年月日时分秒 |
+| √        | `stop`         | 结束时间             | `int[6]`，分别为年月日时分秒 |
+|          | `start_julian` | 开始时刻的简化儒略日 |                              |
+|          | `stop_julian`  | 结束时刻的简化儒略日 |                              |
+|          | `days`         | 总天数               |                              |
+
+## roms.grid：网格
+
+| 用户输入 | 子配置项      | 含义                        | 格式                                  |
+| -------- | ------------- | --------------------------- | ------------------------------------- |
+| √        | `longitude`   | 经度范围                    | `double[2]`，分别为西侧经度、东侧经度 |
+| √        | `latitude`    | 经度范围                    | `double[2]`，分别为南侧纬度、北侧纬度 |
+| √        | `size`        | 网格大小（分辨率）          | `int[2]`，分别为Lm、Mm                |
+| √        | `N`           | 垂向分层                    | `int`                                 |
+| √        | `theta_s`     | 地形跟随坐标θs参数          | `double`                              |
+| √        | `theta_b`     | 地形跟随坐标θb参数          | `double`                              |
+| √        | `Tcline`      | 地形跟随坐标最小值          | `double`                              |
+| √        | `Vtransform`  | 地形跟随坐标Vtransform参数  | `int`                                 |
+| √        | `Vstretching` | 地形跟随坐标Vstretching参数 | `int`                                 |
+
+## roms.nc：ROMS输入文件
+
+| 用户输入 | 子配置项         | 含义           | 格式     |
+| -------- | ---------------- | -------------- | -------- |
+| √        | `../project_dir` | 项目地址       | `char[]` |
+| √        | `grid`           | 网格文件       | `char[]` |
+| √        | `force`          | 气象强迫场文件 | `char[]` |
+| √        | `climatology`    | 气候强迫场文件 | `char[]` |
+| √        | `initialization` | 初始场文件     | `char[]` |
+| √        | `boundary`       | 边界场文件     | `char[]` |
+| √        | `tides`          | 潮汐强迫场文件 | `char[]` |
+| √        | `rivers`         | 河流文件       | `char[]` |
+
+## roms.res：数据资源路径
+
+| 用户输入 | 子配置项              | 含义                                                         | 格式     |
+| -------- | --------------------- | ------------------------------------------------------------ | -------- |
+| √        | `force_ncep_dir`      | NCEP FNL数据的文件夹位置<br />需要下载[NCEP的FNL数据](https://rda.ucar.edu/datasets/ds083.2/)，作为气象强迫文件的插值源。 | `char[]` |
+| √        | `ETOPO1_Bed_c_gmt4`   | 全球地形文件<br />用于网格文件的插值，可以从[此处](https://www.ngdc.noaa.gov/mgg/global/)下载，选择Cell/pixel-registered，netCDF，...gmt4.grd.gz。 | `char[]` |
+| √        | `gshhs_f`             | 全球海岸线文件<br />用于编辑水陆点，可以从[此处](https://www.soest.hawaii.edu/pwessel/gshhg/)下载，选择binary files。 | `char[]` |
+| √        | `tpx_uv`<br />`tpx_h` | 潮汐文件<br />用于制作抄袭文件，可以从[此处](https://coawstmodel.sourcerepo.com/coawstmodel/data/tide/)下载。 | `char[]` |
+| √        | `hycom`               | 海洋数据链接<br />用于在线下载海洋数据。根据不同的时间，进入[此链接](http://tds.hycom.org/thredds/catalog.html)，寻找合适时间的子目录，选择OPENDAP，获取链接。 | `char[]` |
+
+## roms.rivers：河流
+
+| 用户输入 | 子配置项           | 含义           | 格式                                                         |
+| -------- | ------------------ | -------------- | ------------------------------------------------------------ |
+| √        | `count`            | 河流数量       | `int`                                                        |
+| √        | `location`         | 河流所在的坐标 | `int[rivers.count,2]`<br />行数为河流数量，每一行分别为横坐标和纵坐标。<br />`LuvSrc`时，指的是U/V面的位置；`LwSrc`时，指的是ρ点的位置。 |
+| √        | `direction`        | 流向           | `int[rivers.count,2]`<br />`LuvSrc`时，值为0（U方向）或1（V方向）；`LwSrc`时，值为2 |
+| √        | `time`             | 时间           | `double[]`<br />应覆盖模拟时间段                             |
+| √        | `transport`        | 流量           | `double[rivers.count,grid.N,rivers.time]`<br />`LuvSrc`时，具有正负，正值代表向数值更大的方向流动；`LwSrc`时，恒为正数。<br />单位：$m ^ 3 / s$ |
+| √        | `v_shape`          | 垂向流量分配   | `double[rivers.count,grid.N]`<br />流量在垂直层上的分布的百分比，每一列的总和应当为1。 |
+| √        | `temp`<br />`salt` | 温度<br />盐度 | `double[rivers.count,grid.N,rivers.time]`<br />单位分别为摄氏度、？ |
+| √        | `dye`              | 示踪剂         | `{double[rivers.count,grid.N,rivers.time]}`<br />元胞数组的长度应与配置的示踪剂数量相同。 |
+
+## roms.tracer：示踪剂
+
+| 用户输入 | 子配置项    | 含义           | 格式                                                         |
+| -------- | ----------- | -------------- | ------------------------------------------------------------ |
+| √        | `count`     | 示踪剂图层数量 | `int`                                                        |
+| √        | `densities` | 河流所在的坐标 | `{double[grid.size(1)+1,grid.size(2)+1,grid.N,tracer.count]}`<br />示踪剂在不同位置的浓度。元胞数组的长度应与配置的示踪剂数量相同。 |
+
+# WRF
 
 使用WPS即可完成预处理。
 
-## ROMS
+# ROMS
 
 使用WRF网格来建立ROMS网格，但使用不同的分辨率。
 
-### 创建网格
-首先执行`roms_create_grid_step1`，在弹出的窗口中根据海岸线编辑水陆点。然后执行`roms_create_grid_step2`完成网格的创建。
+## 创建网格
+首先执行`roms_create_grid_from_wrfinput`，从`wrfinput`创建网格，在弹出的窗口中根据海岸线编辑水陆点。然后执行`roms_fill_grid_h`填充水深。
 
 
-### 三维边界场、初始场、气候场
+## 三维边界场、初始场、气候场
 
 执行`roms_create_clm_bdy_ini`。会生成：
 
@@ -49,25 +127,17 @@ create_roms_child_clm( roms_grid, roms_child_grid,  'Sandy_clm.nc', 'Sandy_clm_r
 这一部分还未进行修改。
 
 
-### 潮汐场
-
-
+## 潮汐场
 
 执行`roms_create_tides`，需要一点时间，结束以后会绘制很多图。
 
-### 表面强迫
+## 大气强迫场
 
-可以使用`create_roms_forcings.m`将mat数据转为nc文件，用`narrnc2roms.m`将来自[MARR](ftp.cdc.noaa.gov/Datasets/NARR/monolevel)的数据转为nc文件，用`ftp.cdc.noaa.gov/Datasets/NARR/monolevel`在`THREDDS`获取数据并转为nc文件
+下载NCEP的FNL数据，不要重命名，放在配置中的`roms.res.force_ncep_dir`下。
 
-第472行的网址`url=['http://www.ncei.noaa.gov/thredds/dodsC/narr-a-files/'...`访问不了了，改为`url=['http://www.ncei.noaa.gov/thredds/dodsC/model-narr-a-files/'`，但还是会报错
+执行`roms_create_ncep_force
 
-### 大气强迫场
-
-下载NCEP的FNL数据，不要重命名，放在指定目录下。
-
-执行`roms_create_ncep_force`
-
-### 最终所需要的文件（非嵌套）
+## 最终所必需的文件（非嵌套）
 
 - 网格文件：`roms_grid.nc`
 
@@ -79,11 +149,21 @@ create_roms_child_clm( roms_grid, roms_child_grid,  'Sandy_clm.nc', 'Sandy_clm_r
 
 - 潮汐强迫文件：`roms_tides.nc`
 
+## 其他非必需文件
 
+### 河流
 
-## SWAN
+执行`roms_create_rivers`，创建河流文件。
 
-### 创建网格和水深
+### 被动示踪剂
+
+执行`roms_add_tracer`，向初始场文件中增加示踪剂。
+
+# SWAN
+
+暂未进行优化。
+
+## 创建网格和水深
 
 基于ROMS的网格进行创建：`roms2swan('roms_grid.nc')`
 
@@ -95,11 +175,11 @@ create_roms_child_clm( roms_grid, roms_child_grid,  'Sandy_clm.nc', 'Sandy_clm_r
 
 - ``swan_bathy.bot`提供了每一个网格点的水深
 
-### 风强迫
+## 风强迫
 
 在与WRF耦合时，这一步不需要，因此没有尝试。
 
-### 边界场文件
+## 边界场文件
 
 在用户手册（3.4/3.7）中，提供了两种方法：TPAR (parametric foring files)或2D Spec files (spectral foring files)。但是由于数据源的格式和地址发生了改变，因此两种方法全部失效。在COAWST3.7中，更新了相关的Matlab工具，但是手册尚未更新。因此最新的工具进行介绍自己摸索出来的方法。
 
@@ -159,7 +239,7 @@ ww3_grid='glo_30m' %数据源。这里选的glo_30m是全球30m数据。
 
    
 
-### 初始场文件
+## 初始场文件
 
 修改SWAN的配置文件（ [SWAN.md](SWAN.md) ）：
 
@@ -236,10 +316,10 @@ $END
 
 执行`./scrip_coawst ....in`即可生成网格插值文件。
 
-## 暂存
+# 暂存
 
 
-### ROMS创建嵌套网格
+## ROMS创建嵌套网格
 
 由于暂时没有需求，因此没有写成工具。
 查看WRF网格和ROMS父网格的位置：
@@ -325,7 +405,7 @@ hold on
 plot(lon,lat,'r') 
 ```
 
-# 配置文件
+## 
 
 暂存
 其中有个[网址](http://tds.hycom.org/thredds/dodsC/GLBa0.08/expt_90.9)，来自于[HYCOM](http://tds.hycom.org/thredds/catalog.html)（hybrid coordinate ocean model，混合坐标海洋模型）。这里选用的是GOFS 3.0: HYCOM + NCODA Global 1/12° Analysis (NRL)-[`GLBu0.08/expt_90.9 (2012-05 to 2013-08)/`](http://tds.hycom.org/thredds/catalogs/GLBu0.08/expt_90.9.html)，选择[Hindcast Data: May-2012 to Aug-2013](http://tds.hycom.org/thredds/catalogs/GLBu0.08/expt_90.9.html?dataset=GLBu0.08-expt_90.9)，然后选择OPeNDAP：[//tds.hycom.org/thredds/dodsC/GLBu0.08/expt_90.9](http://tds.hycom.org/thredds/dodsC/GLBu0.08/expt_90.9.html)，其中有个Data URL后面就是所需要的地址。
