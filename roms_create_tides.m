@@ -20,8 +20,8 @@ IPLOT=1;            % 1 to make plots, 0 for no plots
 IWRITE=1;           % 1 to write output to netcdf, 0 for no output
 
 % (1) Specify existing Grid File and new tide Forcing Files
-Gname=[roms.project_dir,'\',roms.nc.grid];
-Fname=roms.nc.tides;
+Gname=[roms.project_dir,'\',roms.input.grid];
+Fname=roms.input.tides;
 
 % (2) Enter ROMS start time.  This will be used to calculate the proper phase
 %     for the tidal constituents.  If you change the start time, this routine

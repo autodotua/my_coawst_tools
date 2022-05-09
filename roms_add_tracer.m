@@ -1,6 +1,6 @@
 configs;
-info=ncinfo(roms.nc.initialization);
-nc=netcdf.open(roms.nc.initialization,'WRITE');
+info=ncinfo(roms.input.initialization);
+nc=netcdf.open(roms.input.initialization,'WRITE');
 xrho_id=netcdf.inqDimID(nc,'xrho');
 erho_id=netcdf.inqDimID(nc,'erho');
 sc_r_id=netcdf.inqDimID(nc,'sc_r');
@@ -23,5 +23,5 @@ end
 netcdf.close(nc)
 
 for i=1:roms.tracer.count
-    ncwrite(roms.nc.initialization,var_name,roms.tracer.densities{i})
+    ncwrite(roms.input.initialization,var_name,roms.tracer.densities{i})
 end

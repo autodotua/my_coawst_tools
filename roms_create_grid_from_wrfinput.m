@@ -17,7 +17,7 @@ plot(lon,lat,'k-')
 plot(lon',lat','k-')
 
 
-roms_grid=roms.nc.grid;
+roms_grid=roms.input.grid;
 rho.lat=lat; rho.lon=lon;
 rho.depth=zeros(size(rho.lon))+100; % for now just make zeros
 rho.mask=zeros(size(rho.lon)); % for now just make zeros

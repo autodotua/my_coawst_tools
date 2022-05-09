@@ -1,10 +1,10 @@
 configs
 
-nc = netcdf.create(roms.nc.rivers,'nc_clobber');
+nc = netcdf.create(roms.input.rivers,'nc_clobber');
 
 % global variables
-netcdf.putAtt(nc,netcdf.getConstant('NC_GLOBAL'),'type', 'ROMS FORCING file');
-netcdf.putAtt(nc,netcdf.getConstant('NC_GLOBAL'),'grd_file',roms.nc.grid );
+netcdf.putAtt(nc,netcdf.getConstant('NC_GLOBAL'),'type', 'ms.ncMS FORCING file');
+netcdf.putAtt(nc,netcdf.getConstant('NC_GLOBAL'),'grd_file',roms.input.grid );
 netcdf.putAtt(nc,netcdf.getConstant('NC_GLOBAL'),'title','rivers');
 
 % dimensions
@@ -67,18 +67,18 @@ netcdf.close(nc)
 
 
 
-ncwrite(roms.nc.rivers,'river',[1:roms.rivers.count]);
-ncwrite(roms.nc.rivers,'river_direction',roms.rivers.direction);
-ncwrite(roms.nc.rivers,'river_Vshape',roms.rivers.v_shape)
-ncwrite(roms.nc.rivers,'river_Xposition',roms.rivers.location(:,1))
-ncwrite(roms.nc.rivers,'river_Eposition',roms.rivers.location(:,2))
-ncwrite(roms.nc.rivers,'river_time',roms.rivers.time+roms.time.start_julian);
-ncwrite(roms.nc.rivers,'river_transport',roms.rivers.transport);
-ncwrite(roms.nc.rivers,'river_salt',roms.rivers.salt);
-ncwrite(roms.nc.rivers,'river_temp',roms.rivers.temp);
+ncwrite(roms.input.rivers,'river',[1:roms.rivers.count]);
+ncwrite(roms.input.rivers,'river_direction',roms.rivers.direction);
+ncwrite(roms.input.rivers,'river_Vshape',roms.rivers.v_shape)
+ncwrite(roms.input.rivers,'river_Xposition',roms.rivers.location(:,1))
+ncwrite(roms.input.rivers,'river_Eposition',roms.rivers.location(:,2))
+ncwrite(roms.input.rivers,'river_time',roms.rivers.time+roms.time.start_julian);
+ncwrite(roms.input.rivers,'river_transport',roms.rivers.transport);
+ncwrite(roms.input.rivers,'river_salt',roms.rivers.salt);
+ncwrite(roms.input.rivers,'river_temp',roms.rivers.temp);
 
 for i=1:numel(roms.rivers.dye)
     var_name=['river_dye_',num2str(i,'%02d')];
-    ncwrite(roms.nc.rivers,var_name,roms.rivers.dye{i});
+    ncwrite(roms.input.rivers,var_name,roms.rivers.dye{i});
 end
 

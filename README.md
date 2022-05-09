@@ -1,8 +1,8 @@
 # 介绍
 
-COAWST TOOLS
+## COAWST_ TOOLS
 
-基于COAWST模式附带的工具包，根据自己所需做出相应修改。
+基于COAWST模式附带的工具包，用于制作ROMS、SWAN等模式的预处理文件，以及提供了一些其他的功能，根据自己所需做出相应修改。
 
 mfiles目录下是一组Matlab的预处理/后处理工具
 
@@ -31,7 +31,7 @@ mfiles目录下是一组Matlab的预处理/后处理工具
 
 在进行一切操作之前，首先需要编辑配置文件`configs.m`。
 
-## roms.time：时间
+## time：时间
 
 | 用户输入 | 子配置项       | 含义                 | 格式                         |
 | -------- | -------------- | -------------------- | ---------------------------- |
@@ -55,12 +55,12 @@ mfiles目录下是一组Matlab的预处理/后处理工具
 | √        | `Vtransform`  | 地形跟随坐标Vtransform参数  | `int`                                 |
 | √        | `Vstretching` | 地形跟随坐标Vstretching参数 | `int`                                 |
 
-## roms.nc：ROMS输入文件
+## input：ROMS输入文件
 
 | 用户输入 | 子配置项         | 含义           | 格式     |
 | -------- | ---------------- | -------------- | -------- |
-| √        | `../project_dir` | 项目地址       | `char[]` |
 | √        | `grid`           | 网格文件       | `char[]` |
+| √        | `bot`            | 地形文件       | `char[]` |
 | √        | `force`          | 气象强迫场文件 | `char[]` |
 | √        | `climatology`    | 气候强迫场文件 | `char[]` |
 | √        | `initialization` | 初始场文件     | `char[]` |
@@ -98,9 +98,11 @@ mfiles目录下是一组Matlab的预处理/后处理工具
 | √        | `count`     | 示踪剂图层数量 | `int`                                                        |
 | √        | `densities` | 河流所在的坐标 | `{double[grid.size(1)+1,grid.size(2)+1,grid.N,tracer.count]}`<br />示踪剂在不同位置的浓度。元胞数组的长度应与配置的示踪剂数量相同。 |
 
-# WRF
+## swan.forcing：SWAN强迫场
 
-使用WPS即可完成预处理。
+| 用户输入 | 子配置项  | 含义           | 格式                                                      |
+| -------- | --------- | -------------- | --------------------------------------------------------- |
+| √        | `specres` | 边界条件分辨率 | `int`<br />每一条边界的长度，这个数值越大，生成的文件越少 |
 
 # ROMS
 
@@ -165,9 +167,9 @@ create_roms_child_clm( roms_grid, roms_child_grid,  'Sandy_clm.nc', 'Sandy_clm_r
 
 ## 创建网格和水深
 
-基于ROMS的网格进行创建：`roms2swan('roms_grid.nc')`
+基于ROMS的网格进行创建：`swan_create_grid_from_roms`
 
-嵌套网格同理：`roms2swan('roms_grid_ref3.nc')`
+嵌套网格同理暂未修改，使用：`roms2swan('roms_grid_ref3.nc')`
 
 生成的文件包括：
 
@@ -175,69 +177,13 @@ create_roms_child_clm( roms_grid, roms_child_grid,  'Sandy_clm.nc', 'Sandy_clm_r
 
 - ``swan_bathy.bot`提供了每一个网格点的水深
 
-## 风强迫
+## 大气强迫
 
 在与WRF耦合时，这一步不需要，因此没有尝试。
 
 ## 边界场文件
 
-在用户手册（3.4/3.7）中，提供了两种方法：TPAR (parametric foring files)或2D Spec files (spectral foring files)。但是由于数据源的格式和地址发生了改变，因此两种方法全部失效。在COAWST3.7中，更新了相关的Matlab工具，但是手册尚未更新。因此最新的工具进行介绍自己摸索出来的方法。
-
-目前此处数据源来自于：[NCEP WAVEWATCH III Hindcast and Reanalysis Archives](https://polar.ncep.noaa.gov/waves/hindcasts/multi_1/) 。数据介绍见 [README.txt](COAWST.assets\README.txt) 。
-
-打开`Tools/mfiles/swan_forc/create_swanTpar_from_WW3.m`，编辑：
-
-```matlab
-working_dir='C:\Users\autod\Desktop\maria' %工作路径
-yearww3='2018' %年份
-mmww3='07' %月份
-modelgrid='C:\Users\autod\Desktop\maria\roms_grid.nc'; %SWAN（未测试）或者ROMS网格的路径
-specres=20; %每一条边界的长度，这个数值越大，生成的文件越少。
-ww3_grid='glo_30m' %数据源。这里选的glo_30m是全球30m数据。
-```
-
-~~可以直接执行，但是程序会下载整个月的数据，分辨率为3小时，每个小时的数据大约需要1分钟。目前不知道为什么要下载整个月的数据。~~
-
-~~对同目录下的`readww3_2TPAR.m`进行修改，找到`timeww3=ncread(hsurl,'time'); timeww3=timeww3(1:end-1);`这两行，这两行取了全部的月份。在这两行下面添加一行：`timeww3=[(<起始日>-1)*8:<结束日>*8];`（经查看，数据分辨率为3小时）~~
-
-~~这样就只会生成所需要的日期的边界数据了。~~
-
-~~生成的数据包括`Bound_spec_command`和一系列的`TPAR*.txt`。前者中的命令需要复制到SWAN的配置文件中。~~
-
-在[NCEI网站](https://www.ncei.noaa.gov/thredds-ocean/catalog/ncep/nww3/catalog.html)下载所需要的数据，进入所需要的年份和月份，进入`gribs`，打开`multi_1.glo_30m.tp|hs|dp.*.grb2`三个文件，选择其中的HTTPServer进行下载。也可以直接在[NCEP网站](https://polar.ncep.noaa.gov/waves/hindcasts/multi_1/)中下载。
-
-下载完之后是3个grib2文件，使用`wgrib2.exe <输入grib2文件> -netcdf <输出nc文件>`转换为nc文件。
-
-由于OPeNDAP提供的变量名等与进入`create_swanTpar_from_WW3`，修改：
-
-1. 重新指定`tpurl`、`hsurl`、`dpurl`的链接为三个nc文件的路径
-
-2. 修改变量：
-
-   1. `ncread(hsurl,'lon')`→`ncread(hsurl,'longitude')`
-   2. ``ncread(hsurl,'lat')`→`ncread(hsurl,'latitude')`
-   3. `Significant_height_of_combined_wind_waves_and_swell_surface`→`HTSGW_surface`
-   4. `Primary_wave_mean_period_surface`→`PERPW_surface`
-   5. `Primary_wave_direction_surface`→`DIRPW_surface`
-
-3. 由于从OPeNDAP获取的数据和转成nc以后的数据存在左右的翻转，因此需要去掉几个`fliplr`函数：
-
-   1. `griddedInterpolant(daplon,fliplr(daplat),fliplr(hs),method)`→`griddedInterpolant(daplon,daplat,hs,method)`
-   2. `FCr.Values=fliplr(tp)`→`FCr.Values=tp`
-   3. `FCr.Values=fliplr(Dwave_Ax)`→`FCr.Values=Dwave_Ax`
-   4. `FCr.Values=fliplr(Dwave_Ay)`→`FCr.Values=Dwave_Ay`
-
-4. 在`timeww3`的定义后修改循环为：
-
-   ```matlab
-   for mm=1:length(timeww3)
-       timeww3(mm)=index; %手动提供时间索引
-       index=index+1;
-       time(mm)=datenum(str2num(yearww3),str2num(mmww3),1,timeww3(mm)*3,0,0); %3是指分辨率为3x
-   end
-   ```
-
-   
+执行`swan_create_boundary`
 
 ## 初始场文件
 
@@ -263,61 +209,7 @@ ww3_grid='glo_30m' %数据源。这里选的glo_30m是全球30m数据。
 
 之后执行`mpirun -np 1 coawstM swan.in`运行一次，生成`swan_init.hot`。
 
-## 网格插值文件
-
-使用之前`Lib/SCRIP_COAWST`生成的可执行文件
-
-使用`scrip_coawst_template.in`模板建立配置文件：
-
-```fortran
-$INPUTS
-
-OUTPUT_NCFILE='scrip_file.nc' !输出文件名
-
-!网格数量
-NGRIDS_ROMS=2,
-NGRIDS_SWAN=2,
-NGRIDS_WW3=0,
-NGRIDS_WRF=2,
-
-!ROMS网格文件
-ROMS_GRIDS(1)='roms_grid1.nc',
-ROMS_GRIDS(2)='roms_grid2.nc',
-
-!SWAN网格文件
-SWAN_COORD(1)='swan_coord1.grd',
-SWAN_COORD(2)='swan_coord2.grd',
-SWAN_BATH(1)='swan_bathy1.bot',
-SWAN_BATH(2)='swan_bathy2.bot',
-SWAN_NUMX(1)=84,
-SWAN_NUMX(2)=116,
-SWAN_NUMY(1)=64,
-SWAN_NUMY(2)=86,
-CARTESIAN(1)=0,
-CARTESIAN(2)=0,
-
-!WW3网格
-WW3_XCOORD(1)=' ',
-WW3_YCOORD(1)='',
-WW3_BATH(1)='',
-WW3_NUMX(1)=1,
-WW3_NUMY(1)=1,
-
-!WRF网格
-WRF_GRIDS(1)='wrfinput_d01',
-WRF_GRIDS(2)='moving',
-PARENT_GRID_RATIO(1)=1,
-PARENT_GRID_RATIO(2)=3,
-PARENT_ID(1)=0
-PARENT_ID(2)=1
-
-$END
-```
-
-执行`./scrip_coawst ....in`即可生成网格插值文件。
-
-# 暂存
-
+# 其他
 
 ## ROMS创建嵌套网格
 
@@ -405,9 +297,8 @@ hold on
 plot(lon,lat,'r') 
 ```
 
-## 
+## 海洋数据下载
 
-暂存
 其中有个[网址](http://tds.hycom.org/thredds/dodsC/GLBa0.08/expt_90.9)，来自于[HYCOM](http://tds.hycom.org/thredds/catalog.html)（hybrid coordinate ocean model，混合坐标海洋模型）。这里选用的是GOFS 3.0: HYCOM + NCODA Global 1/12° Analysis (NRL)-[`GLBu0.08/expt_90.9 (2012-05 to 2013-08)/`](http://tds.hycom.org/thredds/catalogs/GLBu0.08/expt_90.9.html)，选择[Hindcast Data: May-2012 to Aug-2013](http://tds.hycom.org/thredds/catalogs/GLBu0.08/expt_90.9.html?dataset=GLBu0.08-expt_90.9)，然后选择OPeNDAP：[//tds.hycom.org/thredds/dodsC/GLBu0.08/expt_90.9](http://tds.hycom.org/thredds/dodsC/GLBu0.08/expt_90.9.html)，其中有个Data URL后面就是所需要的地址。
 
 > OPeNDAP是一个专门为本地系统透明的访问远程数据的客户端服务器系统，采用此系统客户端无需知道服务器端的存储格式、架构以及所采用的环境
@@ -417,3 +308,64 @@ plot(lon,lat,'r')
 
 
 编辑`Tools/mfiles/tides/create_roms_tides`。修改`Gname`到网格路径。修改`g`到模拟的开始时间。如果用adcirc，那么修改`if (adcirc)`后的路径。如果用ocu，那么修改上面到`adcirc=0;osu=1`，然后修改`if (osu)`后的路径。这里需要用ocu，用adcirc会报错。
+
+## SWAN生成边界场文件代码的修改
+
+在用户手册（3.4/3.7）中，提供了两种方法：TPAR (parametric foring files)或2D Spec files (spectral foring files)。但是由于数据源的格式和地址发生了改变，因此两种方法全部失效。在COAWST3.7中，更新了相关的Matlab工具，但是手册尚未更新。因此最新的工具进行介绍自己摸索出来的方法。
+
+目前此处数据源来自于：[NCEP WAVEWATCH III Hindcast and Reanalysis Archives](https://polar.ncep.noaa.gov/waves/hindcasts/multi_1/) 。数据介绍见 [README.txt](COAWST.assets\README.txt) 。
+
+打开`Tools/mfiles/swan_forc/create_swanTpar_from_WW3.m`，编辑：
+
+```matlab
+working_dir='C:\Users\autod\Desktop\maria' %工作路径
+yearww3='2018' %年份
+mmww3='07' %月份
+modelgrid='C:\Users\autod\Desktop\maria\roms_grid.nc'; %SWAN（未测试）或者ROMS网格的路径
+specres=20; %每一条边界的长度，这个数值越大，生成的文件越少。
+ww3_grid='glo_30m' %数据源。这里选的glo_30m是全球30m数据。
+```
+
+~~可以直接执行，但是程序会下载整个月的数据，分辨率为3小时，每个小时的数据大约需要1分钟。目前不知道为什么要下载整个月的数据。~~
+
+~~对同目录下的`readww3_2TPAR.m`进行修改，找到`timeww3=ncread(hsurl,'time'); timeww3=timeww3(1:end-1);`这两行，这两行取了全部的月份。在这两行下面添加一行：`timeww3=[(<起始日>-1)*8:<结束日>*8];`（经查看，数据分辨率为3小时）~~
+
+~~这样就只会生成所需要的日期的边界数据了。~~
+
+~~生成的数据包括`Bound_spec_command`和一系列的`TPAR*.txt`。前者中的命令需要复制到SWAN的配置文件中。~~
+
+在[NCEI网站](https://www.ncei.noaa.gov/thredds-ocean/catalog/ncep/nww3/catalog.html)下载所需要的数据，进入所需要的年份和月份，进入`gribs`，打开`multi_1.glo_30m.tp|hs|dp.*.grb2`三个文件，选择其中的HTTPServer进行下载。也可以直接在[NCEP网站](https://polar.ncep.noaa.gov/waves/hindcasts/multi_1/)中下载。
+
+下载完之后是3个grib2文件，使用`wgrib2.exe <输入grib2文件> -netcdf <输出nc文件>`转换为nc文件。
+
+由于OPeNDAP提供的变量名等与进入`create_swanTpar_from_WW3`，修改：
+
+1. 重新指定`tpurl`、`hsurl`、`dpurl`的链接为三个nc文件的路径
+
+2. 修改变量：
+
+   1. `ncread(hsurl,'lon')`→`ncread(hsurl,'longitude')`
+   2. ``ncread(hsurl,'lat')`→`ncread(hsurl,'latitude')`
+   3. `Significant_height_of_combined_wind_waves_and_swell_surface`→`HTSGW_surface`
+   4. `Primary_wave_mean_period_surface`→`PERPW_surface`
+   5. `Primary_wave_direction_surface`→`DIRPW_surface`
+
+3. 由于从OPeNDAP获取的数据和转成nc以后的数据存在左右的翻转，因此需要去掉几个`fliplr`函数：
+
+   1. `griddedInterpolant(daplon,fliplr(daplat),fliplr(hs),method)`→`griddedInterpolant(daplon,daplat,hs,method)`
+   2. `FCr.Values=fliplr(tp)`→`FCr.Values=tp`
+   3. `FCr.Values=fliplr(Dwave_Ax)`→`FCr.Values=Dwave_Ax`
+   4. `FCr.Values=fliplr(Dwave_Ay)`→`FCr.Values=Dwave_Ay`
+
+4. 在`timeww3`的定义后修改循环为：
+
+   ```matlab
+   for mm=1:length(timeww3)
+       timeww3(mm)=index; %手动提供时间索引
+       index=index+1;
+       time(mm)=datenum(str2num(yearww3),str2num(mmww3),1,timeww3(mm)*3,0,0); %3是指分辨率为3x
+   end
+   ```
+
+   
+

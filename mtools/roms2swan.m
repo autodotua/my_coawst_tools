@@ -1,4 +1,4 @@
-function ROMS2SWAN(varargin);
+function ROMS2SWAN(varargin,bot,grd);
 %
 % Function to convert a ROMS netCDF depth grid into a SWAN ASCII depth grid,
 % and create the SWAN curvilinear coordinates grid.
@@ -24,13 +24,13 @@ function ROMS2SWAN(varargin);
 %If INPUT has COORDINATES CARTESIAN, then use   x and   y _rho.
 %
 
-if nargin == 1;
-    x_rho = ncread(varargin{1},'lon_rho');
-    y_rho = ncread(varargin{1},'lat_rho');
+if nargin == 3;
+    x_rho = ncread(varargin,'lon_rho');
+    y_rho = ncread(varargin,'lat_rho');
 %   x_rho = ncread(varargin{1},'x_rho');
 %   y_rho = ncread(varargin{1},'y_rho');
-    h = ncread(varargin{1},'h');
-    mask_rho = ncread(varargin{1},'mask_rho');
+    h = ncread(varargin,'h');
+    mask_rho = ncread(varargin,'mask_rho');
 elseif nargin == 4;
     x_rho = varargin{1};
     y_rho = varargin{2};
@@ -50,7 +50,7 @@ h(land_values) = 9999;
 %Print the depths to the bathy file
 [n,m] = size(h);
 
-fid = fopen('swan_bathy.bot','w');
+fid = fopen(bot,'w');
 for index1 = 1:m;
     for index2 = 1:n;
         fprintf(fid,'   ');
@@ -60,7 +60,7 @@ for index1 = 1:m;
 end
 
 %Print the grid coordinates to the grid file
-fid = fopen('swan_coord.grd','w');
+fid = fopen(grd,'w');
 %fprintf(fid,'%12.6f\n',x_rho);
 %fprintf(fid,'%12.6f\n',y_rho);
 fprintf(fid,'%18.12f\n',x_rho);
@@ -68,5 +68,4 @@ fprintf(fid,'%18.12f\n',y_rho);
 
 fclose('all');
 
-disp('I created swan_coord.grd and swan_bathy.bot:  these are part of INPUT.');
 

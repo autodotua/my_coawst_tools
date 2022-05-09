@@ -126,8 +126,8 @@ ntimes = length(time);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % create NetCDF file for forcing data
-disp([' ## 正在创建 ' roms.nc.force '...'])
-nc = netcdf.create(roms.nc.force,'nc_clobber');
+disp([' ## 正在创建 ' roms.input.force '...'])
+nc = netcdf.create(roms.input.force,'nc_clobber');
 
 % global variables
 netcdf.putAtt(nc,netcdf.getConstant('NC_GLOBAL'),'type', 'bulk fluxes forcing file');
@@ -288,9 +288,9 @@ netcdf.close(nc)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % write lon and lat
-ncwrite(roms.nc.force,'lon',lon_rho);
-ncwrite(roms.nc.force,'lat',lat_rho);
-ncwrite(roms.nc.force,'ocean_time',time);
+ncwrite(roms.input.force,'lon',lon_rho);
+ncwrite(roms.input.force,'lat',lat_rho);
+ncwrite(roms.input.force,'ocean_time',time);
 
 % pre allocate some arrays
 fill = zeros([size(lon_rho) ntimes]);

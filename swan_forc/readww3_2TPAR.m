@@ -1,20 +1,18 @@
-function ww3gb_2TPAR(modelgrid,yearww3,mmww3,ww3_grid,specpts)
+function ww3gb_2TPAR(modelgrid,yearww3,mmww3,ww3_grid,specpts,tpurl,hsurl,dpurl)
 
 %set urls of the hsig, peak period, and dominant period
-if (str2num(yearww3)<2017)
-  eval(['hsurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/',ww3_grid,'/multi_1.',ww3_grid,'.hs.',yearww3,mmww3,'.grb2'';'])
-  eval(['tpurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/',ww3_grid,'/multi_1.',ww3_grid,'.tp.',yearww3,mmww3,'.grb2'';'])
-  eval(['dpurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/',ww3_grid,'/multi_1.',ww3_grid,'.dp.',yearww3,mmww3,'.grb2'';'])
-else
-  eval(['hsurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/gribs/multi_1.',ww3_grid,'.hs.',yearww3,mmww3,'.grb2'';'])
-  eval(['tpurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/gribs/multi_1.',ww3_grid,'.tp.',yearww3,mmww3,'.grb2'';'])
-  eval(['dpurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/gribs/multi_1.',ww3_grid,'.dp.',yearww3,mmww3,'.grb2'';'])
-end
+% if (str2num(yearww3)<2017)
+%   eval(['hsurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/',ww3_grid,'/multi_1.',ww3_grid,'.hs.',yearww3,mmww3,'.grb2'';'])
+%   eval(['tpurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/',ww3_grid,'/multi_1.',ww3_grid,'.tp.',yearww3,mmww3,'.grb2'';'])
+%   eval(['dpurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/',ww3_grid,'/multi_1.',ww3_grid,'.dp.',yearww3,mmww3,'.grb2'';'])
+% else
+%   eval(['hsurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/gribs/multi_1.',ww3_grid,'.hs.',yearww3,mmww3,'.grb2'';'])
+%   eval(['tpurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/gribs/multi_1.',ww3_grid,'.tp.',yearww3,mmww3,'.grb2'';'])
+%   eval(['dpurl=''https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncep/nww3/',yearww3,'/',mmww3,'/gribs/multi_1.',ww3_grid,'.dp.',yearww3,mmww3,'.grb2'';'])
+% end
 
 %修改为本地路径
-tpurl="C:\Users\autod\Desktop\maria\multi_1.glo_30m.tp.201807.nc"
-hsurl="C:\Users\autod\Desktop\maria\multi_1.glo_30m.hs.201807.nc"
-dpurl="C:\Users\autod\Desktop\maria\multi_1.glo_30m.dp.201807.nc"
+
 
 %
 %first lets get the lon, lat, and time of the ww3 data

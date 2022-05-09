@@ -1,3 +1,11 @@
+clear roms swan
+
+%% 路径
+
+%项目文件目录
+roms.project_dir='C:\Users\autod\Desktop\bh';
+swan.project_dir=roms.project_dir;
+
 %% 时间
 %开始时间
 roms.time.start=[2018,1,1,0,0,0];
@@ -10,6 +18,7 @@ roms.time.stop_julian=juliandate(datetime(roms.time.stop),'modifiedjuliandate');
 %总天数
 roms.time.days=roms.time.stop_julian-roms.time.start_julian+1;
 
+swan.time=roms.time;
 %% 网格
 %经度范围
 roms.grid.longitude=[117,122.5];
@@ -30,23 +39,28 @@ roms.grid.Vtransform  =  1;
 %地形跟随坐标Vstretching参数
 roms.grid.Vstretching =  1;
 
-%% ROMS输入文件
-%项目文件目录
-roms.project_dir='C:\Users\autod\Desktop\bh';
+
+
+%% 输入文件
 %网格文件
-roms.nc.grid='roms_grid.nc';
+roms.input.grid='roms_grid.nc';
 %气象场强迫文件
-roms.nc.force = 'roms_frc.nc';
+roms.input.force = 'roms_frc.nc';
 %气候文件
-roms.nc.climatology = 'roms_clm.nc';
+roms.input.climatology = 'roms_clm.nc';
 %初始场文件
-roms.nc.initialization = 'roms_ini.nc';
+roms.input.initialization = 'roms_ini.nc';
 %边界场文件
-roms.nc.boundary = 'roms_bdy.nc';
+roms.input.boundary = 'roms_bdy.nc';
 %潮汐强迫文件
-roms.nc.tides = 'roms_tides.nc';
+roms.input.tides = 'roms_tides.nc';
 %河流定义文件
-roms.nc.rivers='roms_rivers.nc';
+roms.input.rivers='roms_rivers.nc';
+%地形文件
+swan.input.bot='swan_bathy.bot';
+%网格文件
+swan.input.grd='swan_coord.grid';
+
 
 %% 数据资源路径
 %包含ncep的fnl气象场的目录
@@ -61,6 +75,7 @@ roms.res.tpx_uv='data/tpx_uv.mat';
 roms.res.tpx_h='data/tpx_h.mat';
 %水文数据的URL
 roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBa0.08/expt_91.2';
+swan.multi_1_glo_30m='data';
 
 %% 河流
 %河流数量
@@ -109,7 +124,11 @@ data1=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
 %示踪剂的密度
 roms.tracer.densities={data1,data2};
 
-clear data1
-clear data2
+%% SWAN强迫
+%分辨率
+swan.forcing.specres=40;
+
+%% 清理
+clear data1 data2 temp i j
 
 

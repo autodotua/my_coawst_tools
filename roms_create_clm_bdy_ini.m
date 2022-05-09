@@ -38,7 +38,7 @@ url = roms.res.hycom;      % 2011-01 to 2013-08
 wdr = roms.project_dir;
 
 % (4) Enter path and name of the ROMS grid
-modelgrid = roms.nc.grid;
+modelgrid = roms.input.grid;
 
 % (5) Enter grid vertical coordinate parameters --These need to be consistent with the ROMS setup. 
 theta_s=roms.grid.theta_s;
@@ -59,15 +59,15 @@ disp('getting roms grid, hycom grid, and overlapping indices')
 
 % Call to create the climatology (clm) file
 disp('going to create clm file')
-fn=updatclim_coawst_mw(T1, gn, clm, roms.nc.climatology, wdr, url);
+fn=updatclim_coawst_mw(T1, gn, clm, roms.input.climatology, wdr, url);
 
 % Call to create the boundary (bdy) file
 disp('going to create bndry file')
-updatbdry_coawst_mw(fn, gn, roms.nc.boundary, wdr);
+updatbdry_coawst_mw(fn, gn, roms.input.boundary, wdr);
 
 % Call to create the initial (ini) file
 disp('going to create init file')
-updatinit_coawst_mw(fn, gn, roms.nc.initialization, wdr, T1);
+updatinit_coawst_mw(fn, gn, roms.input.initialization, wdr, T1);
 
 toc
 
@@ -92,8 +92,8 @@ if numdays>1
     Dclm=dirsort('coawst_clm_*.nc');
     Dbdy=dirsort('coawst_bdy_*.nc');
     %names for merged climatology/boundary files
-    fout=roms.nc.climatology;
-    foutb=roms.nc.boundary;
+    fout=roms.input.climatology;
+    foutb=roms.input.boundary;
     %create netcdf files to merge climatology into
     create_roms_netcdf_clm_mwUL(fout,gn,length(Dclm));% converted to BI functions
     create_roms_netcdf_bndry_mwUL(foutb,gn,length(Dbdy));% converted to BI functions
