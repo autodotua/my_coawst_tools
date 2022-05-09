@@ -12,8 +12,7 @@ s_rho_id = netcdf.defDim(nc,'s_rho',roms.grid.N);
 river_id = netcdf.defDim(nc,'river',roms.rivers.count);
 river_time_id = netcdf.defDim(nc,'river_time',netcdf.getConstant('NC_UNLIMITED'));
 
-% variables and attributes
-disp(' ## Defining Variables and Attributes...')
+disp('正在创建NetCDF结构')
 
 id = netcdf.defVar(nc,'river_time','double',river_time_id);
 netcdf.putAtt(nc,id,'long_name','river runoff time');
@@ -58,15 +57,23 @@ netcdf.putAtt(nc,id,'time','river_time');
 
 for i=1:numel(roms.rivers.dye)
     var_name=['river_dye_',num2str(i,'%02d')];
+%     var_name=['river_dye_',num2str(i*2-1,'%02d')];
     id = netcdf.defVar(nc,var_name,'double',[river_id,s_rho_id,river_time_id]);
     netcdf.putAtt(nc,id,'long_name',var_name);
     netcdf.putAtt(nc,id,'time','river_time');
+
+
+    %     var_name=['river_dye_',num2str(i*2,'%02d')];
+    %     id = netcdf.defVar(nc,var_name,'double',[river_id,s_rho_id,river_time_id]);
+    %     netcdf.putAtt(nc,id,'long_name',var_name);
+    %     netcdf.putAtt(nc,id,'time','river_time');
 end
 
 netcdf.close(nc)
 
 
 
+disp('正在写入数据')
 ncwrite(roms.input.rivers,'river',[1:roms.rivers.count]);
 ncwrite(roms.input.rivers,'river_direction',roms.rivers.direction);
 ncwrite(roms.input.rivers,'river_Vshape',roms.rivers.v_shape)
@@ -78,7 +85,11 @@ ncwrite(roms.input.rivers,'river_salt',roms.rivers.salt);
 ncwrite(roms.input.rivers,'river_temp',roms.rivers.temp);
 
 for i=1:numel(roms.rivers.dye)
+%     var_name=['river_dye_',num2str(i*2-1,'%02d')];
     var_name=['river_dye_',num2str(i,'%02d')];
     ncwrite(roms.input.rivers,var_name,roms.rivers.dye{i});
+%     var_name=['river_dye_',num2str(i*2,'%02d')];
+%     temp=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time))*10000000;
+%     ncwrite(roms.input.rivers,var_name,temp);
 end
 

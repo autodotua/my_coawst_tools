@@ -83,22 +83,26 @@ roms.rivers.count=2;
 %河流的位置，每一行为一条河流的水平坐标值
 roms.rivers.location=[142,64;90,80];
 %河流的流向，0为u方向，1为v方向，2为w方向
-roms.rivers.direction=[0,0];
+roms.rivers.direction=[2,2];
 %定义时间，开始时间为0时刻。
 roms.rivers.time=[0:roms.time.days];
 temp=ones(roms.rivers.count,numel(roms.rivers.time));
-temp(:,:)=20000;
+temp(:,:)=0;
 %不同时间的河流流量，每一行一条河流，列数为时间数。
 roms.rivers.transport=temp;
+%temp=ones(roms.rivers.count,roms.grid.N)/roms.grid.N;
+temp=zeros(roms.rivers.count,roms.grid.N);
+temp(:,end)=1;
 %不同垂直层之间的流量分配，每一行为一条河流，每条河流流量总和为1。
-roms.rivers.v_shape=ones(roms.rivers.count,roms.grid.N)/roms.grid.N;
+roms.rivers.v_shape=temp;
 temp=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
 temp(:,:,:)=10;
 %温度数据
 roms.rivers.temp=temp;
 %盐度数据
 roms.rivers.salt=temp;
-temp(:,:,:)=100;
+temp(:,:,:)=0;
+temp(:,end,:)=100;
 
 temp(:,:,10:20)=0;
 %被动示踪剂数据，数量应和roms.tracer.count相同。
@@ -106,29 +110,22 @@ roms.rivers.dye={temp};
 
 %% 被动示踪剂
 %示踪剂数量（变量的数量）
-roms.tracer.count=2;
-data1=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
+roms.tracer.count=1;
+temp=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
 for i=144:146
     for j=74:76
-        data1(i,j,:)=1;
+        temp(i,j,:)=1;
     end
 end
-
-data2=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
-for i=95:98
-    for j=70:74
-        data2(i,j,:)=1;
-    end
-end
-data1=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
+temp(:)=0;
 %示踪剂的密度
-roms.tracer.densities={data1,data2};
+roms.tracer.densities={temp};
 
 %% SWAN强迫
 %分辨率
 swan.forcing.specres=40;
 
 %% 清理
-clear data1 data2 temp i j
+clear temp i j
 
 
