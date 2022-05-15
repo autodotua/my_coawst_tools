@@ -16,7 +16,9 @@ disp('正在创建NetCDF结构')
 
 id = netcdf.defVar(nc,'river_time','double',river_time_id);
 netcdf.putAtt(nc,id,'long_name','river runoff time');
-netcdf.putAtt(nc,id,'units','days since 1858-11-17 00:00:00 UTC');
+netcdf.putAtt(nc,id,'units','days');
+%原来可以用下面的，但是新版ROMS用下面的会报错时间不对
+%netcdf.putAtt(nc,id,'units','days since 1858-11-17 00:00:00 UTC');
 
 id = netcdf.defVar(nc,'river','double',river_id);
 netcdf.putAtt(nc,id,'long_name','river runoff identification number');

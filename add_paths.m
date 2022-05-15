@@ -1,3 +1,4 @@
-path='C:\Users\autod\OneDrive\大学\coawst_tools';
+path=fileparts(mfilename('fullpath'));
 addpath(genpath(path));
 run(fullfile(path,'nctoolbox','setup_nctoolbox.m'));
+clear path
