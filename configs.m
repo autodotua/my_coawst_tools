@@ -4,6 +4,7 @@ clear roms swan
 
 %ROMS项目文件目录
 roms.project_dir='C:\Users\autod\Desktop\bh';
+roms.build_dir='/home/fangz/roms/build';
 %SWAN项目文件目录
 swan.project_dir=roms.project_dir;
 
@@ -61,6 +62,11 @@ roms.input.rivers='roms_rivers.nc';
 swan.input.bot='swan_bathy.bot';
 %网格文件
 swan.input.grd='swan_coord.grid';
+
+%% 输出文件
+%ROMS输出历史文件
+roms.output.hisotry='ocean_his.nc';
+roms.output.floats='ocean_flt.nc';
 
 
 %% 数据资源路径

@@ -24,6 +24,7 @@ end
 
 function r= get_rivers_transport(roms)
 r=1000*ones(roms.rivers.count,numel(roms.rivers.time));
+r(1,:)=0;
 end
 
 function r= get_rivers_vshape(roms)
@@ -43,7 +44,7 @@ dyes=cell(roms.tracer.count,1);
 for i=1:numel(roms.tracer.count)
     dye=zeros(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
     dye(:)=100;
-    dye(:,:,10:20)=0;
+    %dye(:,:,10:20)=0;
     dyes{i}=dye;
 end
 r= dyes;

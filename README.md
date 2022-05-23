@@ -27,6 +27,43 @@ mfiles目录下是一组Matlab的预处理/后处理工具
 
 - 增加或修复了部分工具，例如添加河流文件、增加初始场示踪剂等。
 
+# 目录和文件
+
+## 原版目录
+
+| 目录名         | 内容                                                         |
+| -------------- | ------------------------------------------------------------ |
+| `inwave_tools` | 正在开发                                                     |
+| `m_map`        | 地图的绘制等                                                 |
+| `mtools`       | ROMS创建网格、加载NC文件、将网格转为scrip、从ROMS网格创建WRF网格等工具 |
+| `roms_clm`     | 创建边界、初始文件、气候文件等。主驱动文件是roms_master_climatology_coawst_mw.m |
+| `rutgers`      | 来自Rutgers的水深测量、边界、海岸线、强迫、网格、陆地掩膜、 netcdf、海水、和实用文件夹 |
+| `swan_forc`    | 读取WW3 Grib2文件并创建SWAN Trap强迫文件，主驱动文件是ww3_swan_input.m |
+| `tides`        | 为ROMS创建潮汐强迫                                           |
+
+## 新增文件
+
+| 文件名                                   | 内容                                             |
+| ---------------------------------------- | ------------------------------------------------ |
+| `add_paths`                              | 将当前目录注册到MATLAB中，并注册nctoolbox        |
+| `configs`                                | 集合的配置文件                                   |
+| `configs_check`                          | 对配置文件的部分正确性进行检查                   |
+| `configs_rivers`                         | 配置详细河流参数                                 |
+| `configs_tracer`                         | 配置详细示踪剂参数                               |
+| `extract_nc_variables`                   | 将NetCDF文件中的部分变量提取并保存到`.mat`文件中 |
+| `roms_add_tracer`                        | 为ROMS初始场文件中添加示踪剂                     |
+| `roms_create_clm_bdy_ini`                | 创建ROMS的初始场、气象场、边界场文件             |
+| `roms_create_grid_from_wrfinput`         | 根据WRF的输入文件，创建ROMS网格                  |
+| `roms_create_ncep_force`                 | 从NCEP FNL数据中创建ROMS强迫文件                 |
+| `roms_create_rivers`                     | 创建ROMS河流文件                                 |
+| `roms_create_tides`                      | 创建ROMS潮汐文件                                 |
+| `roms_fill_grid_h`                       | 向ROMS网格文件中填充深度信息                     |
+| `show_dye_contour`                       | 显示ROMS示踪剂的等值线图                         |
+| `show_dye_cross_sectional_concentration` | 显示ROMS示踪剂的横截面浓度图                     |
+| `show_floats`                            | 显示ROMS漂浮子的轨迹                             |
+| `swan_create_boundary`                   | 创建SWAN的边界场                                 |
+| `swan_create_grid_from_roms`             | 根据ROMS的网格创建相同的SWAN网格                 |
+
 # 配置文件
 
 在进行一切操作之前，首先需要编辑配置文件`configs.m`。

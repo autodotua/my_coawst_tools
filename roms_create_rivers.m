@@ -1,5 +1,5 @@
 configs
-
+cd(roms.project_dir)
 nc = netcdf.create(roms.input.rivers,'nc_clobber');
 
 % global variables
