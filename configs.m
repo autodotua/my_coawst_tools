@@ -2,8 +2,9 @@ clear roms swan
 
 %% 路径
 
-%项目文件目录
+%ROMS项目文件目录
 roms.project_dir='C:\Users\autod\Desktop\bh';
+%SWAN项目文件目录
 swan.project_dir=roms.project_dir;
 
 %% 时间
@@ -88,7 +89,7 @@ roms.tracer=configs_tracer(roms);
 %河流数量
 roms.rivers.count=1;
 %河流的流向，0为u方向，1为v方向，2为w方向
-roms.rivers.direction=ones(roms.rivers.count)*2;
+roms.rivers.direction=ones(roms.rivers.count,1)*2;
 %定义时间，开始时间为0时刻。
 roms.rivers.time=[0:roms.time.days];
 %河流的位置，每一行为一条河流的水平坐标值
@@ -111,7 +112,8 @@ roms.rivers=configs_rivers(roms);
 %分辨率
 swan.forcing.specres=40;
 
-%% 清理
+%% 清理和检查
 clear temp i j
+configs_check(roms,swan)
 
 
