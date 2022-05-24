@@ -1,5 +1,8 @@
 clear roms swan
 
+ignore.rivers=true;
+ignore.tracer=false;
+
 %% 路径
 
 %ROMS项目文件目录
@@ -85,34 +88,37 @@ roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBa0.08/expt_91.2';
 swan.multi_1_glo_30m='data';
 
 %% 被动示踪剂
-%示踪剂数量（变量的数量）
-roms.tracer.count=1;
-%示踪剂的密度
-roms.tracer.densities=cell(roms.tracer.count,1); roms.tracer.densities{:}=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
-%应用对示踪剂的具体设置
-roms.tracer=configs_tracer(roms);
+if~ignore.tracer
+    %示踪剂数量（变量的数量）
+    roms.tracer.count=1;
+    %示踪剂的密度
+    roms.tracer.densities=cell(roms.tracer.count,1); roms.tracer.densities{:}=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
+    %应用对示踪剂的具体设置
+    roms.tracer=configs_tracer(roms);
+end
 %% 河流
-%河流数量
-roms.rivers.count=1;
-%河流的流向，0为u方向，1为v方向，2为w方向
-roms.rivers.direction=ones(roms.rivers.count,1)*2;
-%定义时间，开始时间为0时刻。
-roms.rivers.time=[0:roms.time.days];
-%河流的位置，每一行为一条河流的水平坐标值
-roms.rivers.location=zeros(roms.rivers.count,2);
-%不同时间的河流流量，每一行一条河流，列数为时间数。
-roms.rivers.transport=ones(roms.rivers.count,numel(roms.rivers.time));
-%不同垂直层之间的流量分配，每一行为一条河流，每条河流流量总和为1。
-roms.rivers.v_shape=ones(roms.rivers.count,roms.grid.N)/roms.grid.N;
-%温度数据
-roms.rivers.temp=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
-%盐度数据
-roms.rivers.salt=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
-%被动示踪剂数据，数量应和roms.tracer.count相同。
-roms.rivers.dye=cell(roms.tracer.count,1); roms.rivers.dye{:}=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
-%应用对河流的具体设置
-roms.rivers=configs_rivers(roms);
-
+if ~ignore.rivers
+    %河流数量
+    roms.rivers.count=1;
+    %河流的流向，0为u方向，1为v方向，2为w方向
+    roms.rivers.direction=ones(roms.rivers.count,1)*2;
+    %定义时间，开始时间为0时刻。
+    roms.rivers.time=[0:roms.time.days];
+    %河流的位置，每一行为一条河流的水平坐标值
+    roms.rivers.location=zeros(roms.rivers.count,2);
+    %不同时间的河流流量，每一行一条河流，列数为时间数。
+    roms.rivers.transport=ones(roms.rivers.count,numel(roms.rivers.time));
+    %不同垂直层之间的流量分配，每一行为一条河流，每条河流流量总和为1。
+    roms.rivers.v_shape=ones(roms.rivers.count,roms.grid.N)/roms.grid.N;
+    %温度数据
+    roms.rivers.temp=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
+    %盐度数据
+    roms.rivers.salt=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
+    %被动示踪剂数据，数量应和roms.tracer.count相同。
+    roms.rivers.dye=cell(roms.tracer.count,1); roms.rivers.dye{:}=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
+    %应用对河流的具体设置
+    roms.rivers=configs_rivers(roms);
+end
 
 %% SWAN强迫
 %分辨率
@@ -120,6 +126,6 @@ swan.forcing.specres=40;
 
 %% 清理和检查
 clear temp i j
-configs_check(roms,swan)
+configs_check(roms,swan,ignore)
 
 

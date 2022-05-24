@@ -1,6 +1,4 @@
-function configs_check(roms,swan)
-
-%% 检查数据
+function configs_check(roms,swan,ignore)
 is_true(isfolder(roms.project_dir),"roms.project_dir指定的目录不存在")
 
 is_size_of(roms.time.start,6)
@@ -24,32 +22,35 @@ is_positive(roms.grid.Tcline)
 is_in(roms.grid.Vtransform,[1,2])
 is_in(roms.grid.Vstretching,[1:4])
 
-is_size_of(roms.tracer.densities,[roms.tracer.count,1])
-is_all_size_of(roms.tracer.densities,[roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N])
+if ~ignore.tracer
+    is_size_of(roms.tracer.densities,[roms.tracer.count,1])
+    is_all_size_of(roms.tracer.densities,[roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N])
+end
 
-is_size_of(roms.rivers.count,1)
-is_positive_integer(roms.rivers.count)
-is_size_of(roms.rivers.direction,[roms.rivers.count,1])
-is_in(roms.rivers.direction,[0:2])
-is_natural_integer(roms.rivers.time)
-is_size_of(roms.rivers.location,[roms.rivers.count,2])
-is_natural_integer(roms.rivers.location)
-is_size_of(roms.rivers.transport,[roms.rivers.count,numel(roms.rivers.time)])
-is_natural_integer(roms.rivers.transport)
-is_size_of(roms.rivers.v_shape,[roms.rivers.count,roms.grid.N])
-is_zero_or_positive(roms.rivers.v_shape)
-is_equal(sum(roms.rivers.v_shape,2),ones(roms.rivers.count,1),"roms.rivers.v_shape每一行的和应为1",true)
-is_size_of(roms.rivers.temp,[roms.rivers.count,roms.grid.N,numel(roms.rivers.time)])
-is_true(roms.rivers.temp>=-20,"存在低于-20℃的温度",true)
-is_true(roms.rivers.temp<=40,"存在高于40℃的温度",true)
-is_size_of(roms.rivers.salt,[roms.rivers.count,roms.grid.N,numel(roms.rivers.time)])
-is_zero_or_positive(roms.rivers.salt)
-is_size_of(roms.rivers.dye,[roms.tracer.count,1])
-is_all_size_of(roms.rivers.dye,[roms.rivers.count,roms.grid.N,numel(roms.rivers.time)])
+if~ignore.rivers
+    is_size_of(roms.rivers.count,1)
+    is_positive_integer(roms.rivers.count)
+    is_size_of(roms.rivers.direction,[roms.rivers.count,1])
+    is_in(roms.rivers.direction,[0:2])
+    is_natural_integer(roms.rivers.time)
+    is_size_of(roms.rivers.location,[roms.rivers.count,2])
+    is_natural_integer(roms.rivers.location)
+    is_size_of(roms.rivers.transport,[roms.rivers.count,numel(roms.rivers.time)])
+    is_natural_integer(roms.rivers.transport)
+    is_size_of(roms.rivers.v_shape,[roms.rivers.count,roms.grid.N])
+    is_zero_or_positive(roms.rivers.v_shape)
+    is_equal(sum(roms.rivers.v_shape,2),ones(roms.rivers.count,1),"roms.rivers.v_shape每一行的和应为1",true)
+    is_size_of(roms.rivers.temp,[roms.rivers.count,roms.grid.N,numel(roms.rivers.time)])
+    is_true(roms.rivers.temp>=-20,"存在低于-20℃的温度",true)
+    is_true(roms.rivers.temp<=40,"存在高于40℃的温度",true)
+    is_size_of(roms.rivers.salt,[roms.rivers.count,roms.grid.N,numel(roms.rivers.time)])
+    is_zero_or_positive(roms.rivers.salt)
+    is_size_of(roms.rivers.dye,[roms.tracer.count,1])
+    is_all_size_of(roms.rivers.dye,[roms.rivers.count,roms.grid.N,numel(roms.rivers.time)])
 
-is_size_of(swan.forcing.specres,1)
-is_positive_integer(swan.forcing.specres)
-
+    is_size_of(swan.forcing.specres,1)
+    is_positive_integer(swan.forcing.specres)
+end
 disp("参数验证成功")
 end
 
@@ -69,7 +70,7 @@ if ~state
     if warn_only
         warning(error_msg)
     else
-    error(error_msg)
+        error(error_msg)
     end
 end
 end

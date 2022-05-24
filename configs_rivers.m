@@ -28,7 +28,8 @@ r(1,:)=0;
 end
 
 function r= get_rivers_vshape(roms)
-r=ones(roms.rivers.count,roms.grid.N)/roms.grid.N;
+r=zeros(roms.rivers.count,roms.grid.N)/roms.grid.N;
+r(:,end)=1;
 end
 
 function r= get_rivers_temp(roms)
