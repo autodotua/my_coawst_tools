@@ -10,7 +10,7 @@ function [gn, clm]=get_ijrg(url, modelgrid, theta_s, theta_b, Tcline, N, Vtransf
 %
 % Read ROMS grid info
 %
-disp('getting roms grid dimensions ...');
+disp('正在获取ROMS网格的维度');
 Sinp.theta_s     =theta_s;      %surface control parameter
 Sinp.theta_b     =theta_b;      %bottom  control parameter
 Sinp.Tcline      =Tcline;       %surface/bottom stretching width
@@ -34,7 +34,7 @@ gn.z_w=shiftdim(gn.z_w,2);
 %
 % Read HYCOM lon lat depth
 %
-display(['getting HYCOM grid data from ', url])
+disp(['正在从', url,'下载HYCOM网格']);
 numX=ncread(url,'X');
 numY=ncread(url,'Y');
 hycom_lon=ncread(url,'Longitude',[1 1],[length(numX) 1]);
@@ -47,13 +47,13 @@ hycom_depth=ncread(url,'Depth');
 %
 % Get roms grid limits
 %
-disp('getting roms grid dimensions ...');
+disp('正在获取ROMS网格维度');
 xl=min(min(gn.lon_rho));xr=max(max(gn.lon_rho));
 yb=min(min(gn.lat_rho));yt=max(max(gn.lat_rho));
 %
 % optimize the chunk size to obtain from hycom
 %
-disp('optimizing grid dimensions ...');
+disp('正在优化网格尺寸');
 %
 % now use xg and yg becasue we are modifying the lon
 %

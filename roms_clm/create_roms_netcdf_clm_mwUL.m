@@ -7,12 +7,10 @@ function create_roms_netcdf_clm_mwUL(fn,gn,t_clim)
 nc=netcdf.create(fn,bitor(0,4096));   %JBZ update for NC4 files, equivalent to 'clobber' + 'NETCDF4'
 if isempty(nc), return, end
 
-disp(' ## Defining Global Attributes...')
 netcdf.putAtt(nc,netcdf.getConstant('NC_GLOBAL'),'history', ['Created by updatclim on ' datestr(now)]);
 netcdf.putAtt(nc,netcdf.getConstant('NC_GLOBAL'),'type', 'climate forcing file from http://hycom.coaps.fsu.edu:8080/thredds/dodsC/glb_analysis');
 
 % Dimensions:
-disp(' ## Defining Dimensions...')
 %dimid = netcdf.defDim(ncid,dimname,dimlen)
 LP=xi;
 MP=eta;
@@ -41,7 +39,6 @@ tptdimID = netcdf.defDim(nc,'temp_time',t_clim);
 onedimID = netcdf.defDim(nc,'one',1);
 
 % Variables and attributes:
-disp(' ## Defining Variables, and Attributes...')
 %varid = netcdf.defVar(ncid,varname,xtype,dimids)
 %netcdf.putAtt(ncid,varid,attrname,attrvalue)
 

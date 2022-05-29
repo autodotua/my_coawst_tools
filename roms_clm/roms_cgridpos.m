@@ -21,8 +21,7 @@ sv = size(grd.lon_v);
 sr = size(grd.lon_rho);
 sp = size(grd.lon_psi);
 if sr(1)==sr(2)
-  warning([ 'The grid is square so the result of ' ...
-	which(mfilename) ' may be unreliable']);
+  warning([ '网格 ' ,	which(mfilename), ' 是正方形的，结果可能不可靠']);
 end
 
 % only the right-most 2 dimensions matter

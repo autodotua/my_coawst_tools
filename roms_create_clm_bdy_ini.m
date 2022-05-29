@@ -54,19 +54,19 @@ eval(['cd ',wdr])
 tic
 
 % Call to get HYCOM indices for the defined ROMS grid
-disp('getting roms grid, hycom grid, and overlapping indices')
+disp('正在获取网格，HYCOM网格和索引')
 [gn, clm]=get_ijrg(url, modelgrid, theta_s, theta_b, Tcline, N, Vtransform, Vstretching);
 
 % Call to create the climatology (clm) file
-disp('going to create clm file')
+disp('正在创建气候文件')
 fn=updatclim_coawst_mw(T1, gn, clm, roms.input.climatology, wdr, url);
 
 % Call to create the boundary (bdy) file
-disp('going to create bndry file')
+disp('正在创建边界文件')
 updatbdry_coawst_mw(fn, gn, roms.input.boundary, wdr);
 
 % Call to create the initial (ini) file
-disp('going to create init file')
+disp('正在创建初始场文件')
 updatinit_coawst_mw(fn, gn, roms.input.initialization, wdr, T1);
 
 toc
@@ -74,23 +74,23 @@ toc
 
 %% Call to create the long climatology (clm) file
 if numdays>1
-    disp('going to create more days of clm and bnd files')
+    disp('正在创建剩余日的气候、边界文件')
     if (ispc)
-      eval(['!copy coawst_clm.nc coawst_clm_',datestr(T1,'yyyymmdd'),'.nc'])
-      eval(['!copy coawst_bdy.nc coawst_bdy_',datestr(T1,'yyyymmdd'),'.nc'])
+      eval(['!copy roms_clm.nc roms_clm_',datestr(T1,'yyyymmdd'),'.nc'])
+      eval(['!copy roms_bdy.nc roms_bdy_',datestr(T1,'yyyymmdd'),'.nc'])
     else
-      eval(['!cp coawst_clm.nc coawst_clm_',datestr(T1,'yyyymmdd'),'.nc'])
-      eval(['!cp coawst_bdy.nc coawst_bdy_',datestr(T1,'yyyymmdd'),'.nc'])
+      eval(['!cp roms_clm.nc roms_clm_',datestr(T1,'yyyymmdd'),'.nc'])
+      eval(['!cp roms_bdy.nc roms_bdy_',datestr(T1,'yyyymmdd'),'.nc'])
     end
     for it=dayFrequency:dayFrequency:numdays-1      %1st day already created, NEED to set number of days at top!
-        fname=['coawst_clm_',datestr(T1+it,'yyyymmdd'),'.nc'];
+        fname=['roms_clm_',datestr(T1+it,'yyyymmdd'),'.nc'];
         fn=updatclim_coawst_mw(T1+it,gn,clm,fname,wdr,url);
-        fname=['coawst_bdy_',datestr(T1+it,'yyyymmdd'),'.nc'];
+        fname=['roms_bdy_',datestr(T1+it,'yyyymmdd'),'.nc'];
         updatbdry_coawst_mw(fn,gn,fname,wdr)
     end
     %% get an organized list of dated files
-    Dclm=dirsort('coawst_clm_*.nc');
-    Dbdy=dirsort('coawst_bdy_*.nc');
+    Dclm=dirsort('roms_clm_*.nc');
+    Dbdy=dirsort('roms_bdy_*.nc');
     %names for merged climatology/boundary files
     fout=roms.input.climatology;
     foutb=roms.input.boundary;
@@ -150,6 +150,6 @@ if numdays>1
     end
 end
 
-!del coawst_clm_*.nc
-!del coawst_bdy_*.nc
+!del roms_clm_*.nc
+!del roms_bdy_*.nc
 toc

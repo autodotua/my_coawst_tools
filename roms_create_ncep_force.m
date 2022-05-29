@@ -101,7 +101,7 @@ end
 % use_matlab = 0;
 use_nctoolbox = 1;
 
-level=1;
+level=1; %用师兄的代码跑不了，发现部分变量好像有好几层，所以加了一个选第一层的代码。
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%  END OF USER INPUT  %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -440,7 +440,7 @@ save NCEP_data.mat
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-nc = roms_force_name;
+nc = roms.input.force;
 if get_lwrad
     ncwrite(nc,'lrf_time',time);
     ncwrite(nc,'lwrad',lwrad);
@@ -478,4 +478,4 @@ if get_Wind
     ncwrite(nc,'Vwind',Vwind);
 end
 !del *.gbx8
-disp(['------------ wrote ',roms_force_name,' ------------']);
+disp(['------------ wrote ',roms.input.force,' ------------']);

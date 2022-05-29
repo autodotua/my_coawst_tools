@@ -1,4 +1,4 @@
-configs
+configs("tracer")
 cd(roms.project_dir)
 info=ncinfo(roms.input.initialization);
 nc=netcdf.open(roms.input.initialization,'WRITE');

@@ -1,12 +1,12 @@
 configs
 hold on
-
+cd(roms.project_dir)
 xl=roms.grid.longitude(1); xr=roms.grid.longitude(2);
 yb= roms.grid.latitude(1); yt= roms.grid.latitude(2);
 numx=roms.grid.size(1)+1; numy=roms.grid.size(2)+1;
 dx=(xr-xl)/numx; dy=(yt-yb)/numy; %x和y的分辨率
 
-    axis([xl,xr,yb,yt]);
+axis([xl,xr,yb,yt]);
 
 netcdf_load(roms.res.ETOPO1_Bed_c_gmt4)
 hx1=find(x>xl,1)-1; hx2=find(x<xr,1,'last')+1;

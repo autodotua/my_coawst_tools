@@ -113,7 +113,7 @@ NAT=2;            % Number of active tracers. Usually 2 (temp + salt).
 
 %9) Provide initial sediment properties in water column.
 %
-  display('Initializing suspended sediments.')
+  disp('正在初始化悬浮沉积物')
 %
 % mud.
 %
@@ -134,7 +134,7 @@ end
 %10) Provide initial sediment properties in bed.
 %
 % bed properties
-  display('Initializing sediment bed.')
+  disp('正在初始化沉积床')
 %
 for k=1:Nbed
   for time=1:length(ocean_time)
@@ -176,7 +176,7 @@ end
 %11)
 %
 % set some surface properties
-  display('Initializing sediment surface properties.')
+  disp('正在初始化沉积物表面特性')
 %
     cff1=1.0;
     cff2=1.0;
@@ -229,7 +229,7 @@ create_roms_netcdf_init_mw(init_file,gn,Nbed,NNS,NCS,NVEG)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 nc_init=netcdf.open(init_file,'NC_WRITE');
 
-disp(' ## Filling Variables in netcdf file with data...')
+  disp('正在写入初始场文件')
 
 % copy clm time to init time
   tempid = netcdf.inqVarID(nc_init,'ocean_time');  %get id

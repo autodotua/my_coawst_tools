@@ -100,7 +100,7 @@ else
     % check that the data is ordered from deep to shallow
     if any(diff(zlev)<0)
       % depths are arranged from shallowest to deepest, so flip
-      warning([ ' reversing zlev to arrange as deep to shallow']);
+      warning([ '反转zlev，使其从深到浅排列']);
       zlev = flipud(zlev);
       data = flipdim(data,ndims(data)-2);  % check ndims to get right z index 
     end
@@ -162,14 +162,14 @@ if do_interp2
   
 else
   
-  disp('Input is assumed to be on the ROMS horizontal rho grid') % ------------
+  disp('假设输入在 roms 水平 rho 网格上') % ------------
   switch CgridPos
     
     case 'rho'
       roms_stdlev = data;
       
     case 'u'
-      disp(' but is being averaged to the u-points grid ')
+      disp('但正在平均到 u 点网格')
       [LL,MM] = size(romslon);
       switch ndims(roms_stdlev)
         case 4
@@ -181,7 +181,7 @@ else
       end
       
     case 'v'
-      disp(' but is being averaged to the v-points grid ')
+      disp('但正在平均到 v 点网格')
       [LL,MM] = size(romslon);
       switch ndims(roms_stdlev)
         case 4
@@ -206,7 +206,7 @@ if isempty(roms)
   
 else
   
-  disp('Interpolating to ROMS s-coordinates') % -------------------------------
+  disp('正在插值σ坐标') % -------------------------------
   
   % if necessary, average the roms z_r to velocity points
   z_ = grd.z_r;
@@ -223,14 +223,14 @@ else
     
     case 4
       for l=1:Nt
-        disp([' Doing time ' int2str(l) ' of ' int2str(Nt)])
+        disp(['执行时间： ' int2str(l) ' / ' int2str(Nt)])
         
         % interpolate a y-z plane each time
         Nx = size(roms,3);
         for i=1:Nx % x index
           
           if ~rem(i,20)
-            disp(['  Doing i = ' int2str(i) ' of ' int2str(Nx)])
+            disp(['执行中： i = ' int2str(i) ' /' int2str(Nx)])
           end
           
           z = squeeze(z_(:,i,:));
@@ -257,7 +257,7 @@ else
       for i=1:Nx % x index
         
         if ~rem(i,20)
-          disp(['  Doing i = ' int2str(i) ' of ' int2str(Nx)])
+          disp(['  执行中： i = ' int2str(i) ' / ' int2str(Nx)])
         end
         
         z = squeeze(z_(:,i,:));

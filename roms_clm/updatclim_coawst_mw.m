@@ -13,7 +13,7 @@ function [fn]=updatclim_coawst_mw(T1, gn, clm, clmname, wdr, url)
 %
 %determine indices for time period of interpolation
 %
-disp('getting the number of time records ...');
+disp('正在获取记录的时间数量');
 t0=datenum(1900,12,31); % tr0=datenum(1858,11,17);
 time=ncread(url,'MT');
 tg=time+t0;
@@ -27,7 +27,7 @@ if isempty(tid1)
 end
 
 fn=[clmname];
-disp(['creating netcdf file ',fn]);
+disp(['正在创建nc文件 ',fn]);
 create_roms_netcdf_clm_mwUL(fn,gn,1);% converted to BI functions
 
 %fill grid dims using builtin (BI) functions
@@ -43,14 +43,14 @@ tz_levs=length(clm.z);
 X=repmat(clm.lon,1,length(clm.lat));
 Y=repmat(clm.lat,length(clm.lon),1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp(['Interpolating u for ',datestr(tg(tid1))]);
+disp(['插值U数据：',datestr(tg(tid1))]);
 ttu=1;
 clm.u=zeros([length(clm.z) size(gn.lon_rho)]);
-while ttu==1;
+while ttu==1
     try
         tmpt=ncread(url,'u',[clm.ig0 clm.jg0 1 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 tz_levs 1 ] );
         for k=1:tz_levs
-            disp(['doing griddata u for HYCOM level ' num2str(k)]);
+            disp(['正在插值HYCOM的U数据，层：' num2str(k)]);
             tmp=double(squeeze(tmpt(:,:,k)));
             if (k==1)
               F = scatteredInterpolant(X(:),Y(:),tmp(:));
@@ -62,7 +62,7 @@ while ttu==1;
         end
         ttu=0;
     catch
-        disp(['catch u Unable to download HYCOM u data at' datestr(now)]);
+        disp(['无法下载HYCOM的U数据：' datestr(now)]);
         fid=fopen('coawstlog.txt','a');
         fprintf(fid,'Unable to download HYCOM u data at');
         fprintf(fid,datestr(now));
@@ -75,14 +75,14 @@ clm=rmfield(clm,'u');
 save u.mat u
 clear u;
 
-disp(['Interpolating v for ',datestr(tg(tid1))]);
+disp(['插值V数据：',datestr(tg(tid1))]);
 ttv=1;
 clm.v=zeros([length(clm.z) size(gn.lon_rho)]);
-while ttv==1;
+while ttv==1
     try
         tmpt=ncread(url,'v',[clm.ig0 clm.jg0 1 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 tz_levs 1 ] );
         for k=1:tz_levs
-            disp(['doing griddata v for HYCOM level ' num2str(k)]);
+            disp(['正在插值HYCOM的V数据，层：' num2str(k)]);
             tmp=double(squeeze(tmpt(:,:,k)));
             if (k==1)
               F = scatteredInterpolant(X(:),Y(:),tmp(:));
@@ -94,7 +94,7 @@ while ttv==1;
         end
         ttv=0;
     catch
-        disp(['catch v Unable to download HYCOM v data at' datestr(now)]);
+        disp(['无法下载HYCOM的V数据：' datestr(now)]);
         fid=fopen('coawstlog.txt','a');
         fprintf(fid,'Unable to download HYCOM v data at');
         fprintf(fid,datestr(now));
@@ -110,7 +110,7 @@ clear v;
 %== Rotate the velocity
 theta=exp(-sqrt(-1)*mean(mean(gn.angle)));
 load u.mat; load v.mat
-disp('doing rotation to grid for u and v');
+disp('正在旋转U和V网格');
 uv=(u2rho_3d_mw(u)+sqrt(-1)*v2rho_3d_mw(v)).*theta;
 u=rho2u_3d_mw(real(uv)); v=rho2v_3d_mw(imag(uv));
 clear uv
@@ -161,19 +161,19 @@ clear vbar
 clear uv
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% interpolate the zeta data
-disp(['Interpolating zeta for ',datestr(tg(tid1))]);
+disp(['正在插值自由表面数据',datestr(tg(tid1))]);
 ttz=1;
-while ttz==1;
+while ttz==1
     try
         tmpt=ncread(url,'ssh',[clm.ig0 clm.jg0 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 1 ] );
         tmp=double(squeeze(tmpt(:,:)));
-        disp(['doing griddata zeta for HYCOM ']);
+        disp(['正在插值HYCOM的自由表面数据，层：']);
         F = scatteredInterpolant(X(:),Y(:),tmp(:));
         cff = F(gn.lon_rho,gn.lat_rho);
         zeta=maplev(cff);
         ttz=0;
     catch
-        disp(['catch z Unable to download HYCOM ssh data at' datestr(now)]);
+        disp(['无法下载HYCOM的自由表面数据：' datestr(now)]);
         fid=fopen('coawstlog.txt','a');
         fprintf(fid,'Unable to download HYCOM ssh data at');
         fprintf(fid,datestr(now));
@@ -190,14 +190,14 @@ netcdf.putVar(RN,tempid,zeta);
 netcdf.close(RN);
 clear zeta;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp(['Interpolating temp for ',datestr(tg(tid1))]);
+disp(['正在插值温度数据',datestr(tg(tid1))]);
 ttt=1;
 clm.temp=zeros([length(clm.z) size(gn.lon_rho)]);
-while ttt==1;
+while ttt==1
     try
         tmpt=ncread(url,'temperature',[clm.ig0 clm.jg0 1 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 tz_levs 1 ] );
         for k=1:tz_levs
-            disp(['doing griddata temp for HYCOM level ' num2str(k)]);
+            disp(['正在插值HYCOM的温度数据，层：' num2str(k)]);
             tmp=double(squeeze(tmpt(:,:,k)));
             if (k==1)
               F = scatteredInterpolant(X(:),Y(:),tmp(:));
@@ -210,7 +210,7 @@ while ttt==1;
         end
         ttt=0;
     catch
-        disp(['catch temp Unable to download HYCOM temp data at' datestr(now)]);
+        disp(['无法下载HYCOM的温度数据：' datestr(now)]);
         fid=fopen('coawstlog.txt','a');
         fprintf(fid,'Unable to download HYCOM temp data at');
         fprintf(fid,datestr(now));
@@ -233,14 +233,14 @@ clear temp;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp(['Interpolating salt for ',datestr(tg(tid1))]);
+disp(['正在插值盐度数据',datestr(tg(tid1))]);
 tts=1;
 clm.salt=zeros([length(clm.z) size(gn.lon_rho)]);
 while tts==1;
     try
         tmpt=ncread(url,'salinity',[clm.ig0 clm.jg0 1 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 tz_levs 1 ] );
         for k=1:tz_levs
-            disp(['doing griddata salt for HYCOM level ' num2str(k)]);
+            disp(['正在插值HYCOM的盐度数据，层：' num2str(k)]);
             tmp=double(squeeze(tmpt(:,:,k)));
             if (k==1)
               F = scatteredInterpolant(X(:),Y(:),tmp(:));
@@ -253,7 +253,7 @@ while tts==1;
         end
         tts=0;
     catch
-        disp(['catch temp Unable to download HYCOM temp data at' datestr(now)]);
+        disp(['无法下载HYCOM的盐度数据：' datestr(now)]);
         fid=fopen('coawstlog.txt','a');
         fprintf(fid,'Unable to download HYCOM temp data at');
         fprintf(fid,datestr(now));
@@ -274,5 +274,5 @@ netcdf.putVar(RN,tempid,shiftdim(salt,1));
 netcdf.close(RN);
 clear salt;
 
-disp(['Finished creating clim file at ' datestr(now)]);
+disp(['完成创建气候学文件： ' datestr(now)]);
 %%
