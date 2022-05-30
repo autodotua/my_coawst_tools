@@ -1,5 +1,5 @@
 function rivers=configs_rivers(roms)
-roms.rivers.count=2;
+roms.rivers.count=1;
 roms.rivers.time=[0:roms.time.days];
 roms.rivers.direction=get_rivers_direction(roms);
 roms.rivers.location=get_rivers_location(roms);
@@ -17,27 +17,25 @@ end
 
 function r= get_rivers_location(roms)
 r= [
-    81 88
-    160 50
+    130 130
+    %160 50
     ];
 end
 
 function r= get_rivers_transport(roms)
 r=1000*ones(roms.rivers.count,numel(roms.rivers.time));
-r(1,:)=0;
 end
 
 function r= get_rivers_vshape(roms)
-r=zeros(roms.rivers.count,roms.grid.N)/roms.grid.N;
-r(:,end)=1;
+r=ones(roms.rivers.count,roms.grid.N)/roms.grid.N;
 end
 
 function r= get_rivers_temp(roms)
-r= zeros(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
+r= 4*ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
 end
 
 function r= get_rivers_salt(roms)
-r= zeros(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
+r= 40*ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
 end
 
 function r= get_rivers_dye(roms)

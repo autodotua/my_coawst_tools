@@ -1,4 +1,4 @@
-configs
+configs("rivers")
 cd(roms.project_dir)
 nc = netcdf.create(roms.input.rivers,'nc_clobber');
 

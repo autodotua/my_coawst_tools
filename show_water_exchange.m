@@ -1,30 +1,29 @@
 function show_water_exchange
     configs
-    dye=evalin('base', 'dye_02');
+    dye=evalin('base', 'dye_01');
     s=size(dye);
     z=zeros(s(1:3));
-    m=ncread(fullfile(roms.project_dir,roms.input.grid),'mask_rho');
-    for x=1:s(1)
+    h=ncread(fullfile(roms.project_dir,roms.input.grid),'mask_rho');
+  for x=1:s(1)
         for y=1:s(2)
-            if m(x,y)
-                if x<78
-                    z(x,y,:)=1;
-                elseif x<164
-                    if y>92
-                        z(x,y,:)=2;
-                    elseif y<42
-                        z(x,y,:)=3;
-                    else
-                        z(x,y,:)=4;
-                    end
+            if h(x,y)
+                if x>160
+                    continue
+                elseif x>70
+                    z(x,y,:)=4;
                 else
-                    z(x,y,:)=5;
+                    if y<116
+                    z(x,y,:)=3;
+                    elseif x>37 && y<125 || x>55 && y<145
+                    z(x,y,:)=2;
+                    else
+                    z(x,y,:)=1;
+                    end
                 end
             end
         end
     end
-    %figure(1); [X,Y]=meshgrid(1:s(1),1:s(2));    pcolorjw(X,Y,z(:,:,1).') %绘制区域示意图
-    show_water_exchange_core(dye,z,5)
+    show_water_exchange_core(dye,z,4)
 end
 function show_water_exchange_core(dye,zones,count)
     arguments
