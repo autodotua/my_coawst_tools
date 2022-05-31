@@ -1,3 +1,4 @@
+error('尚未完成')
 groups=ones(6)*20;
 configs
 netcdf_load(roms.input.grid);
