@@ -95,8 +95,6 @@ function configs(type)
         roms.tracer.count=1;
         %示踪剂的密度
         roms.tracer.densities=cell(roms.tracer.count,1); roms.tracer.densities{:}=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
-        %应用对示踪剂的具体设置
-        roms.tracer=configs_tracer(roms);
     end
     %% 河流
     if type=="rivers"
@@ -118,8 +116,6 @@ function configs(type)
         roms.rivers.salt=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
         %被动示踪剂数据，数量应和roms.tracer.count相同。
         roms.rivers.dye=cell(roms.tracer.count,1); roms.rivers.dye{:}=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
-        %应用对河流的具体设置
-        roms.rivers=configs_rivers(roms);
     end
 
     %% SWAN强迫

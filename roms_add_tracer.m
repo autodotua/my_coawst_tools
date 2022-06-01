@@ -1,3 +1,4 @@
+configs
 roms.tracer.count=1;
 d1=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N);
 d2=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N);
@@ -6,7 +7,7 @@ d4=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N);
 d5=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N);
 s=size(d1);
 h=ncread(fullfile(roms.project_dir,roms.input.grid),'mask_rho');
-%d1(130:150,100:120,:)=10;
+d1(130:150,100:120,:)=10;
 %     for x=1:s(1)
 %         for y=1:s(2)
 %             if h(x,y)
@@ -29,6 +30,7 @@ h=ncread(fullfile(roms.project_dir,roms.input.grid),'mask_rho');
 
 %示踪剂的密度
 % roms.tracer.densities={d1;d2;d3;d4;d5};
+
 roms.tracer.densities={d1};
 
-roms_add_tracer_core
+roms_add_tracer_core(roms)
