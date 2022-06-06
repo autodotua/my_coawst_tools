@@ -8,7 +8,7 @@ function configs(type)
     %% 路径
 
     %ROMS项目文件目录
-    roms.project_dir='C:\Users\autod\Desktop\bh';
+    roms.project_dir='C:\Users\autod\Desktop\hzw';
     roms.build_dir='/home/fangz/roms/build';
     %SWAN项目文件目录
     swan.project_dir=roms.project_dir;
@@ -28,13 +28,13 @@ function configs(type)
     swan.time=roms.time;
     %% 网格
     %经度范围
-    roms.grid.longitude=[117.4,119.4];
+    roms.grid.longitude=[120.42,122.52];
     %纬度范围
-    roms.grid.latitude=[37.5,39.5];
+    roms.grid.latitude=[29.86,31.13];
     %网格数量，与in文件Lm和Mm的相同，比rho、xi_v、eta_u少2，比xi_u、eta_v、psi少1
-    roms.grid.size=[200,200];
+    roms.grid.size=[200,140];
     %垂向分层
-    roms.grid.N           = 30;
+    roms.grid.N           = 20;
     %地形跟随坐标θs参数
     roms.grid.theta_s     =  1.0;
     %地形跟随坐标θb参数

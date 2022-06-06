@@ -478,6 +478,7 @@ function roms_create_force_NCEP
         ncwrite(nc,'Uwind',Uwind);
         ncwrite(nc,'Vwind',Vwind);
     end
+    cd(roms.res.force_ncep_dir)
     !del *.gbx8
-    disp(['------------ wrote ',roms.input.force,' ------------']);
+    disp(['------------ “—–¥»ÎµΩ ',roms.input.force,' ------------']);
 end

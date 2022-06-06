@@ -10,6 +10,7 @@ function roms_fill_grid_h_core
 
     %[x2,y2]=meshgrid(x((179+xl)*60:(181+xr)*60),y((89+yb)*60:(91+yt)*60));
     %z2=-z((179+xl)*60:(181+xr)*60,(89+yb)*60:(91+yt)*60)';hx1=find(x>xl,1)-1; hx2=find(x<xr,1,'last')+1;
+    hx1=find(x>xl,1)-1; hx2=find(x<xr,1,'last')+1;
     hy1=find(y>yb,1)-1; hy2=find(y<yt,1,'last')+1;
     [x2,y2]=meshgrid(x(hx1:hx2),y(hy1:hy2));
     z2=-z(hx1:hx2,hy1:hy2)';
