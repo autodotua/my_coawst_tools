@@ -17,7 +17,7 @@ function roms_create_tides_tpx
     % Requires: T_TIDE and TIDAL_ELLIPSE packages
     configs
     %%%%% BEGINNING of USER-MODIFIED SECTION %%%%%
-    IPLOT=1;            % 1 to make plots, 0 for no plots
+    IPLOT=0;            % 1 to make plots, 0 for no plots
     IWRITE=1;           % 1 to write output to netcdf, 0 for no output
 
     % (1) Specify existing Grid File and new tide Forcing Files

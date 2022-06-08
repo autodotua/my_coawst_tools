@@ -78,7 +78,14 @@ function configs(type)
     %包含ncep的fnl气象场的目录
     roms.res.force_ncep_dir="ncep";
     %全球地形文件
-    roms.res.ETOPO1_Bed_c_gmt4='data/ETOPO1_Bed_c_gmt4.grd';
+%     roms.res.elevation='data/SRTM15_V2.4.nc';
+%     roms.res.elevation_longitude='lon';
+%     roms.res.elevation_latitude='lat';
+%     roms.res.elevation_altitude='z';
+    roms.res.elevation='data/ETOPO1_Bed_c_gmt4.grd';
+    roms.res.elevation_longitude='x';
+    roms.res.elevation_latitude='y';
+    roms.res.elevation_altitude='z';
     %全球海岸线文件
     roms.res.gshhs_f='data/gshhs_f.b';
     %潮汐水平运动文件

@@ -5,14 +5,11 @@ nc_init=netcdf.create(Fname,'clobber');
  
 %% Global attributes:
 
-disp(' ## Defining Global Attributes...')
 netcdf.putAtt(nc_init,netcdf.getConstant('NC_GLOBAL'),'history', ['Created by create_roms_tide_forc on ' datestr(now)]);
 netcdf.putAtt(nc_init,netcdf.getConstant('NC_GLOBAL'),'type', 'tide forcing file');
 
 
 %% Dimensions:
-
-disp(' ## Defining Dimensions...')
  
 %get some grid info
 xrho = Lp;
