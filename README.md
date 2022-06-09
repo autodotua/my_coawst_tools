@@ -24,8 +24,8 @@ mfiles目录下是一组Matlab的预处理/后处理工具
 ## 更改
 
 - 本项目将多个文件中分散的配置进行了综合，使用`config.m`文件进行统一管理
-
-- 增加或修复了部分工具，例如添加河流文件、增加初始场示踪剂等。
+- 增加或修复了部分ROMS和SWAN工具，例如添加河流文件、增加初始场示踪剂等。
+- 增加了一些通用型工具
 
 # 目录和文件
 
@@ -41,32 +41,53 @@ mfiles目录下是一组Matlab的预处理/后处理工具
 | `swan_forc`    | 读取WW3 Grib2文件并创建SWAN Trap强迫文件，主驱动文件是ww3_swan_input.m |
 | `tides`        | 为ROMS创建潮汐强迫                                           |
 
-## 新增文件
+## 基本
 
-| 文件名                                   | 内容                                             |
-| ---------------------------------------- | ------------------------------------------------ |
-| `add_paths`                              | 将当前目录注册到MATLAB中，并注册nctoolbox        |
-| `configs`                                | 集合的配置文件                                   |
-| `configs_check`                          | 对配置文件的部分正确性进行检查                   |
-| `configs_rivers`                         | 配置详细河流参数                                 |
-| `configs_tracer`                         | 配置详细示踪剂参数                               |
-| `extract_nc_variables`                   | 将NetCDF文件中的部分变量提取并保存到`.mat`文件中 |
-| `roms_add_tracer`                        | 为ROMS初始场文件中添加示踪剂                     |
-| `roms_create_clm_bdy_ini`                | 创建ROMS的初始场、气象场、边界场文件             |
-| `roms_create_grid_from_wrfinput`         | 根据WRF的输入文件，创建ROMS网格                  |
-| `roms_create_ncep_force`                 | 从NCEP FNL数据中创建ROMS强迫文件                 |
-| `roms_create_rivers`                     | 创建ROMS河流文件                                 |
-| `roms_create_tides`                      | 创建ROMS潮汐文件                                 |
-| `roms_fill_grid_h`                       | 向ROMS网格文件中填充深度信息                     |
-| `show_dye_contour`                       | 显示ROMS示踪剂的等值线图                         |
-| `show_dye_cross_sectional_concentration` | 显示ROMS示踪剂的横截面浓度图                     |
-| `show_floats`                            | 显示ROMS漂浮子的轨迹                             |
-| `swan_create_boundary`                   | 创建SWAN的边界场                                 |
-| `swan_create_grid_from_roms`             | 根据ROMS的网格创建相同的SWAN网格                 |
+| 文件名      | 内容                                      |
+| ----------- | ----------------------------------------- |
+| `add_paths` | 将当前目录注册到MATLAB中，并注册nctoolbox |
+| `configs`   | 集合的配置文件                            |
+
+## 输入文件制作
+
+| 文件名                           | 内容                                 |
+| -------------------------------- | ------------------------------------ |
+| `roms_add_tracer`                | 为ROMS初始场文件中添加示踪剂         |
+| `roms_create_clm_bdy_ini`        | 创建ROMS的初始场、气象场、边界场文件 |
+| `roms_create_grid_from_wrfinput` | 根据WRF的输入文件，创建ROMS网格      |
+| `roms_create_ncep_force`         | 从NCEP FNL数据中创建ROMS强迫文件     |
+| `roms_create_rivers`             | 创建ROMS河流文件                     |
+| `roms_create_tides`              | 创建ROMS潮汐文件                     |
+| `roms_fill_grid_h`               | 向ROMS网格文件中填充深度信息         |
+| `swan_create_boundary`           | 创建SWAN的边界场                     |
+| `swan_create_grid_from_roms`     | 根据ROMS的网格创建相同的SWAN网格     |
+
+## 通用工具
+
+| 文件名                  | 内容                                             |
+| ----------------------- | ------------------------------------------------ |
+| `extract_nc_variables`  | 将NetCDF文件中的部分变量提取并保存到`.mat`文件中 |
+| `roms_get_xy_by_lonlat` | 根据经纬度获取ROMS网格的XY位置                   |
+
+## 后处理工具
+
+| 文件名                                   | 内容                         |
+| ---------------------------------------- | ---------------------------- |
+| `show_dye_contour`                       | 显示ROMS示踪剂的等值线图     |
+| `show_dye_cross_sectional_concentration` | 显示ROMS示踪剂的横截面浓度图 |
+| `show_water_exchange`                    | 显示ROMS的水交换折线图       |
+| `show_floats`                            | 显示ROMS漂浮子的轨迹         |
 
 # 配置文件
 
 在进行一切操作之前，首先需要编辑配置文件`configs.m`。
+
+## 路径
+
+| 用户输入 | 子配置项      | 含义                                            | 格式     |
+| -------- | ------------- | ----------------------------------------------- | -------- |
+| √        | `project_dir` | 项目目录，进行预处理的目录                      | `char[]` |
+| √        | `build_dir`   | 模拟文件的输出目录，仅在Linux下直接后处理时指定 | `char[]` |
 
 ## time：时间
 
@@ -78,7 +99,7 @@ mfiles目录下是一组Matlab的预处理/后处理工具
 |          | `stop_julian`  | 结束时刻的简化儒略日 |                              |
 |          | `days`         | 总天数               |                              |
 
-## roms.grid：网格
+## grid：网格
 
 | 用户输入 | 子配置项      | 含义                        | 格式                                  |
 | -------- | ------------- | --------------------------- | ------------------------------------- |
@@ -92,7 +113,7 @@ mfiles目录下是一组Matlab的预处理/后处理工具
 | √        | `Vtransform`  | 地形跟随坐标Vtransform参数  | `int`                                 |
 | √        | `Vstretching` | 地形跟随坐标Vstretching参数 | `int`                                 |
 
-## input：ROMS输入文件
+## input：输入文件
 
 | 用户输入 | 子配置项         | 含义           | 格式     |
 | -------- | ---------------- | -------------- | -------- |
@@ -107,15 +128,16 @@ mfiles目录下是一组Matlab的预处理/后处理工具
 
 ## roms.res：数据资源路径
 
-| 用户输入 | 子配置项              | 含义                                                         | 格式     |
-| -------- | --------------------- | ------------------------------------------------------------ | -------- |
-| √        | `force_ncep_dir`      | NCEP FNL数据的文件夹位置<br />需要下载[NCEP的FNL数据](https://rda.ucar.edu/datasets/ds083.2/)，作为气象强迫文件的插值源。 | `char[]` |
-| √        | `ETOPO1_Bed_c_gmt4`   | 全球地形文件<br />用于网格文件的插值，可以从[此处](https://www.ngdc.noaa.gov/mgg/global/)下载，选择Cell/pixel-registered，netCDF，...gmt4.grd.gz。 | `char[]` |
-| √        | `gshhs_f`             | 全球海岸线文件<br />用于编辑水陆点，可以从[此处](https://www.soest.hawaii.edu/pwessel/gshhg/)下载，选择binary files。 | `char[]` |
-| √        | `tpx_uv`<br />`tpx_h` | 潮汐文件<br />用于制作抄袭文件，可以从[此处](https://coawstmodel.sourcerepo.com/coawstmodel/data/tide/)下载。 | `char[]` |
-| √        | `hycom`               | 海洋数据链接<br />用于在线下载海洋数据。根据不同的时间，进入[此链接](http://tds.hycom.org/thredds/catalog.html)，寻找合适时间的子目录，选择OPENDAP，获取链接。 | `char[]` |
+| 用户输入 | 子配置项                                                     | 含义                                                         | 格式     |
+| -------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------- |
+| √        | `force_ncep_dir`                                             | NCEP FNL数据的文件夹位置<br />需要下载[NCEP的FNL数据](https://rda.ucar.edu/datasets/ds083.2/)，作为气象强迫文件的插值源。 | `char[]` |
+| √        | `elevation`                                                  | 全球地形文件，用于网格文件的插值<br />ETOPO1可以从[此处](https://www.ngdc.noaa.gov/mgg/global/)下载，选择Cell/pixel-registered，netCDF，...gmt4.grd.gz<br />SRTM15可以从[此处](https://topex.ucsd.edu/WWW_html/srtm15_plus.html)下载，选择[FTP SRTM15+ and source identification (SID)](https://topex.ucsd.edu/pub/srtm15_plus/)，[SRTM15_V2.4.nc](https://topex.ucsd.edu/pub/srtm15_plus/SRTM15_V2.4.nc) | `char[]` |
+| √        | `elevation_longitude`<br />`elevation_latitude`<br />`elevation_altitude` | 高程文件中经度、纬度、海拔的字段名                           | `char[]` |
+| √        | `gshhs_f`                                                    | 全球海岸线文件<br />用于编辑水陆点，可以从[此处](https://www.soest.hawaii.edu/pwessel/gshhg/)下载，选择binary files。 | `char[]` |
+| √        | `tpx_uv`<br />`tpx_h`                                        | 潮汐文件<br />用于制作抄袭文件，可以从[此处](https://coawstmodel.sourcerepo.com/coawstmodel/data/tide/)下载。 | `char[]` |
+| √        | `hycom`                                                      | 海洋数据链接<br />用于在线下载海洋数据。根据不同的时间，进入[此链接](http://tds.hycom.org/thredds/catalog.html)，寻找合适时间的子目录，选择OPENDAP，获取链接。 | `char[]` |
 
-## roms.rivers：河流
+## rivers：河流
 
 | 用户输入 | 子配置项           | 含义           | 格式                                                         |
 | -------- | ------------------ | -------------- | ------------------------------------------------------------ |
@@ -128,7 +150,7 @@ mfiles目录下是一组Matlab的预处理/后处理工具
 | √        | `temp`<br />`salt` | 温度<br />盐度 | `double[rivers.count,grid.N,rivers.time]`<br />单位分别为摄氏度、？ |
 | √        | `dye`              | 示踪剂         | `{double[rivers.count,grid.N,rivers.time]}`<br />元胞数组的长度应与配置的示踪剂数量相同。 |
 
-## roms.tracer：示踪剂
+## tracer：示踪剂
 
 | 用户输入 | 子配置项    | 含义           | 格式                                                         |
 | -------- | ----------- | -------------- | ------------------------------------------------------------ |
