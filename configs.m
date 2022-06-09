@@ -78,10 +78,10 @@ function configs(type)
     %包含ncep的fnl气象场的目录
     roms.res.force_ncep_dir="ncep";
     %全球地形文件
-%     roms.res.elevation='data/SRTM15_V2.4.nc';
-%     roms.res.elevation_longitude='lon';
-%     roms.res.elevation_latitude='lat';
-%     roms.res.elevation_altitude='z';
+    %     roms.res.elevation='data/SRTM15_V2.4.nc';
+    %     roms.res.elevation_longitude='lon';
+    %     roms.res.elevation_latitude='lat';
+    %     roms.res.elevation_altitude='z';
     roms.res.elevation='data/ETOPO1_Bed_c_gmt4.grd';
     roms.res.elevation_longitude='x';
     roms.res.elevation_latitude='y';
@@ -99,9 +99,12 @@ function configs(type)
     %% 被动示踪剂
     if type=="rivers" || type=="tracer"
         %示踪剂数量（变量的数量）
-        roms.tracer.count=1;
+        roms.tracer.count=3;
         %示踪剂的密度
-        roms.tracer.densities=cell(roms.tracer.count,1); roms.tracer.densities{:}=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
+        roms.tracer.densities=cell(roms.tracer.count,1);
+        for i=1:numel(roms.tracer.densities)
+            roms.tracer.densities{i}=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
+        end
     end
     %% 河流
     if type=="rivers"
@@ -122,7 +125,11 @@ function configs(type)
         %盐度数据
         roms.rivers.salt=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
         %被动示踪剂数据，数量应和roms.tracer.count相同。
-        roms.rivers.dye=cell(roms.tracer.count,1); roms.rivers.dye{:}=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
+        roms.rivers.dye=cell(roms.tracer.count,1); 
+    
+        for i=1:numel(roms.rivers.dye)
+              roms.rivers.dye{i}=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
+        end
     end
 
     %% SWAN强迫

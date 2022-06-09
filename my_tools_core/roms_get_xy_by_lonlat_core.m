@@ -1,12 +1,14 @@
-function r=roms_get_xy_by_lonlat_core(locations,type)
+function r=roms_get_xy_by_lonlat_core(locations,type,from0)
     arguments
         locations
         type (1,1) string {mustBeMember(type,{'rho','u','v','psi'})} = 'rho'
+        from0 (1,1) logical=1
     end
 
     configs
     lonlats=get_lonlat(locations);
-    r=zeros(size(lonlats));
+    s=size(lonlats);
+    r=zeros(s(1),3);
     cd(roms.project_dir);
     lon_grid=ncread(roms.input.grid,"lon_"+type);
     lat_grid=ncread(roms.input.grid,"lat_"+type);
@@ -32,7 +34,7 @@ function r=roms_get_xy_by_lonlat_core(locations,type)
                 end
             end
         end
-        r(i,:)=[min_x,min_y];
+        r(i,:)=[min_x-double(from0),min_y-double(from0),mask(min_x,min_y)];
         if min_distance>0.05
             warning(['第',num2str(i),'个位置',char(strjoin(string( num2str(location)),',')),'可能位于网格以外，距离为',num2str(min_distance)]);
             plot(lon_grid(min_x,min_y),lat_grid(min_x,min_y),'xr','MarkerSize',16);   
@@ -41,9 +43,7 @@ function r=roms_get_xy_by_lonlat_core(locations,type)
             plot(lon_grid(min_x,min_y),lat_grid(min_x,min_y),'xg','MarkerSize',16);
             text(lon_grid(min_x,min_y),lat_grid(min_x,min_y),num2str(i),'Color','r')
         end
-        
     end
-
     disp(r);
 end
 
