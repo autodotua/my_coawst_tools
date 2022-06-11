@@ -17,7 +17,7 @@ function configs(type)
     %开始时间
     roms.time.start=[2018,1,1,0,0,0];
     %结束时间
-    roms.time.stop=[2018,3,1,0,0,0];
+    roms.time.stop=[2018,5,1,0,0,0];
     %开始时刻的简化儒略日
     roms.time.start_julian=juliandate(datetime(roms.time.start),'modifiedjuliandate');
     %结束时刻的简化儒略日
@@ -34,7 +34,7 @@ function configs(type)
     %网格数量，与in文件Lm和Mm的相同，比rho、xi_v、eta_u少2，比xi_u、eta_v、psi少1
     roms.grid.size=[200,140];
     %垂向分层
-    roms.grid.N           = 20;
+    roms.grid.N           = 10;
     %地形跟随坐标θs参数
     roms.grid.theta_s     =  1.0;
     %地形跟随坐标θb参数
