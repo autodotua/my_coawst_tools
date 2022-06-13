@@ -13,10 +13,11 @@ function [fn]=updatclim_coawst_mw(T1, gn, clm, clmname, wdr, url)
 %
 %determine indices for time period of interpolation
 %
+configs
 disp('正在获取记录的时间数量');
-t0=datenum(1900,12,31); % tr0=datenum(1858,11,17);
-time=ncread(url,'MT');
-tg=time+t0;
+ % tr0=datenum(1858,11,17);
+time=ncread(url,roms.res.hycom_time);
+tg=time/roms.res.hycom_tunit+roms.res.hycom_t0;
 tg2=julian(str2num(datestr(tg,'yyyy')),str2num(datestr(tg,'mm')),str2num(datestr(tg,'dd')),str2num(datestr(tg,'HH')))-2400001;
 %
 % get user times
@@ -48,7 +49,7 @@ ttu=1;
 clm.u=zeros([length(clm.z) size(gn.lon_rho)]);
 while ttu==1
     try
-        tmpt=ncread(url,'u',[clm.ig0 clm.jg0 1 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 tz_levs 1 ] );
+        tmpt=ncread(url,roms.res.hycom_u,[clm.ig0 clm.jg0 1 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 tz_levs 1 ] );
         for k=1:tz_levs
             disp(['正在插值HYCOM的U数据，层：' num2str(k)]);
             tmp=double(squeeze(tmpt(:,:,k)));
@@ -80,7 +81,7 @@ ttv=1;
 clm.v=zeros([length(clm.z) size(gn.lon_rho)]);
 while ttv==1
     try
-        tmpt=ncread(url,'v',[clm.ig0 clm.jg0 1 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 tz_levs 1 ] );
+        tmpt=ncread(url,roms.res.hycom_v,[clm.ig0 clm.jg0 1 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 tz_levs 1 ] );
         for k=1:tz_levs
             disp(['正在插值HYCOM的V数据，层：' num2str(k)]);
             tmp=double(squeeze(tmpt(:,:,k)));
@@ -165,7 +166,7 @@ disp(['正在插值自由表面数据',datestr(tg(tid1))]);
 ttz=1;
 while ttz==1
     try
-        tmpt=ncread(url,'ssh',[clm.ig0 clm.jg0 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 1 ] );
+        tmpt=ncread(url,roms.res.hycom_surface_elevation,[clm.ig0 clm.jg0 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 1 ] );
         tmp=double(squeeze(tmpt(:,:)));
         disp(['正在插值HYCOM的自由表面数据，层：']);
         F = scatteredInterpolant(X(:),Y(:),tmp(:));
@@ -195,7 +196,7 @@ ttt=1;
 clm.temp=zeros([length(clm.z) size(gn.lon_rho)]);
 while ttt==1
     try
-        tmpt=ncread(url,'temperature',[clm.ig0 clm.jg0 1 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 tz_levs 1 ] );
+        tmpt=ncread(url,roms.res.hycom_temp,[clm.ig0 clm.jg0 1 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 tz_levs 1 ] );
         for k=1:tz_levs
             disp(['正在插值HYCOM的温度数据，层：' num2str(k)]);
             tmp=double(squeeze(tmpt(:,:,k)));
@@ -238,7 +239,7 @@ tts=1;
 clm.salt=zeros([length(clm.z) size(gn.lon_rho)]);
 while tts==1;
     try
-        tmpt=ncread(url,'salinity',[clm.ig0 clm.jg0 1 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 tz_levs 1 ] );
+        tmpt=ncread(url,roms.res.hycom_salt,[clm.ig0 clm.jg0 1 tid1],[clm.ig1-clm.ig0+1 clm.jg1-clm.jg0+1 tz_levs 1 ] );
         for k=1:tz_levs
             disp(['正在插值HYCOM的盐度数据，层：' num2str(k)]);
             tmp=double(squeeze(tmpt(:,:,k)));

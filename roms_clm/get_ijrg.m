@@ -1,5 +1,5 @@
 function [gn, clm]=get_ijrg(url, modelgrid, theta_s, theta_b, Tcline, N, Vtransform, Vstretching)
-%
+configs
 % here we get the indices from the hycom grid,
 % compare them to the roms grid,
 % and then just determine a subset of the hycom grid to obtain data from.
@@ -35,11 +35,17 @@ gn.z_w=shiftdim(gn.z_w,2);
 % Read HYCOM lon lat depth
 %
 disp(['正在从', url,'下载HYCOM网格']);
-numX=ncread(url,'X');
-numY=ncread(url,'Y');
-hycom_lon=ncread(url,'Longitude',[1 1],[length(numX) 1]);
-hycom_lat=ncread(url,'Latitude',[1 1],[1 length(numY)]);
-hycom_depth=ncread(url,'Depth');
+hycom_lon=ncread(url,roms.res.hycom_longitude);
+hycom_lon=hycom_lon(:,1);
+hycom_lat=ncread(url,roms.res.hycom_latitude);
+s=size(hycom_lat);
+if(s(2)~=1 && s(1)~=1)
+    hycom_lat=hycom_lat(1,:);
+end
+if s(2)==1
+    hycom_lat=hycom_lat';
+end
+hycom_depth=ncread(url,roms.res.hycom_depth);
 %for exp930
 %hycom_lon=ncread(url,'lon');
 %hycom_lat=ncread(url,'lat');

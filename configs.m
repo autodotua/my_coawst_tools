@@ -17,7 +17,7 @@ function configs(type)
     %开始时间
     roms.time.start=[2018,1,1,0,0,0];
     %结束时间
-    roms.time.stop=[2018,5,1,0,0,0];
+    roms.time.stop=[2018,1,3,0,0,0];
     %开始时刻的简化儒略日
     roms.time.start_julian=juliandate(datetime(roms.time.start),'modifiedjuliandate');
     %结束时刻的简化儒略日
@@ -93,9 +93,33 @@ function configs(type)
     %潮汐高度文件
     roms.res.tpx_h='data/tpx_h.mat';
     %水文数据的URL
-    roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBa0.08/expt_91.2';
-    swan.multi_1_glo_30m='data';
+    roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBv0.08/expt_93.0'; 
+    roms.res.hycom_latitude='lat';
+    roms.res.hycom_longitude='lon';
+    roms.res.hycom_depth='depth';
+    roms.res.hycom_time='time'; %MT
+    roms.res.hycom_t0=datenum(2000,1,1);%datenum(1900,12,31);
+    roms.res.hycom_tunit=24; %1
+    roms.res.hycom_u='water_u'; %u
+    roms.res.hycom_v='water_v'; %v
+    roms.res.hycom_temp='water_temp'; %temperature
+    roms.res.hycom_salt='salinity'; %salinity
+    roms.res.hycom_surface_elevation='surf_el'; %ssh
 
+    roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBa0.08/expt_91.2'; 
+    roms.res.hycom_latitude='Latitude';
+    roms.res.hycom_longitude='Longitude';
+    roms.res.hycom_depth='Depth';
+    roms.res.hycom_time='MT';
+    roms.res.hycom_t0=datenum(1900,12,31);
+    roms.res.hycom_tunit=1; 
+    roms.res.hycom_u='u';
+    roms.res.hycom_v='v';
+    roms.res.hycom_temp='temperature'; 
+    roms.res.hycom_salt='salinity';
+    roms.res.hycom_surface_elevation='ssh'; 
+    %SWAN数据
+    swan.multi_1_glo_30m='data';
     %% 被动示踪剂
     if type=="rivers" || type=="tracer"
         %示踪剂数量（变量的数量）

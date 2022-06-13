@@ -55,6 +55,12 @@ netcdf.putAtt(nc_init,cmaxID,'long_name','maximum tidal current, ellipse semi-mi
 netcdf.putAtt(nc_init,cmaxID,'units','meter second-1');
 netcdf.putAtt(nc_init,cmaxID,'field','tide_Cmax, scalar, series');
 
+% timeID=netcdf.defVar(nc_init,'zero_phase_date','double',[]);
+% netcdf.putAtt(nc_init,timeID,'long_name','tidal reference date for zero phase');
+% netcdf.putAtt(nc_init,timeID,'units','days as %Y%m%d.%f');
+% netcdf.putAtt(nc_init,timeID,'C_format','%13.4f');
+% netcdf.putAtt(nc_init,timeID,'FORTRAN_format','(f13.4)');
+
 netcdf.close(nc_init)
 
 
