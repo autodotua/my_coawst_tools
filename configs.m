@@ -17,7 +17,7 @@ function configs(type)
     %开始时间
     roms.time.start=[2018,1,1,0,0,0];
     %结束时间
-    roms.time.stop=[2018,1,3,0,0,0];
+    roms.time.stop=[2018,1,2,0,0,0];
     %开始时刻的简化儒略日
     roms.time.start_julian=juliandate(datetime(roms.time.start),'modifiedjuliandate');
     %结束时刻的简化儒略日
@@ -36,11 +36,12 @@ function configs(type)
     %垂向分层
     roms.grid.N           = 10;
     %地形跟随坐标θs参数
-    roms.grid.theta_s     =  1.0;
+    roms.grid.theta_s     =  8.0;
     %地形跟随坐标θb参数
-    roms.grid.theta_b     =  0.4;
+    roms.grid.theta_b     =  4.0;
     %地形跟随坐标最小值
-    roms.grid.Tcline      = 1.0;
+    roms.grid.Tcline      = 3.0;
+    roms.grid.Hmin      =3.0;
     %地形跟随坐标Vtransform参数
     roms.grid.Vtransform  =  2;
     %地形跟随坐标Vstretching参数
@@ -78,14 +79,14 @@ function configs(type)
     %包含ncep的fnl气象场的目录
     roms.res.force_ncep_dir="ncep";
     %全球地形文件
-    %     roms.res.elevation='data/SRTM15_V2.4.nc';
-    %     roms.res.elevation_longitude='lon';
-    %     roms.res.elevation_latitude='lat';
-    %     roms.res.elevation_altitude='z';
-    roms.res.elevation='data/ETOPO1_Bed_c_gmt4.grd';
-    roms.res.elevation_longitude='x';
-    roms.res.elevation_latitude='y';
-    roms.res.elevation_altitude='z';
+        roms.res.elevation='data/SRTM15_V2.4.nc';
+        roms.res.elevation_longitude='lon';
+        roms.res.elevation_latitude='lat';
+        roms.res.elevation_altitude='z';
+%     roms.res.elevation='data/ETOPO1_Bed_c_gmt4.grd';
+%     roms.res.elevation_longitude='x';
+%     roms.res.elevation_latitude='y';
+%     roms.res.elevation_altitude='z';
     %全球海岸线文件
     roms.res.gshhs_f='data/gshhs_f.b';
     %潮汐水平运动文件
@@ -105,19 +106,19 @@ function configs(type)
     roms.res.hycom_temp='water_temp'; %temperature
     roms.res.hycom_salt='salinity'; %salinity
     roms.res.hycom_surface_elevation='surf_el'; %ssh
-
-    roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBa0.08/expt_91.2'; 
-    roms.res.hycom_latitude='Latitude';
-    roms.res.hycom_longitude='Longitude';
-    roms.res.hycom_depth='Depth';
-    roms.res.hycom_time='MT';
-    roms.res.hycom_t0=datenum(1900,12,31);
-    roms.res.hycom_tunit=1; 
-    roms.res.hycom_u='u';
-    roms.res.hycom_v='v';
-    roms.res.hycom_temp='temperature'; 
-    roms.res.hycom_salt='salinity';
-    roms.res.hycom_surface_elevation='ssh'; 
+% 
+%     roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBa0.08/expt_91.2'; 
+%     roms.res.hycom_latitude='Latitude';
+%     roms.res.hycom_longitude='Longitude';
+%     roms.res.hycom_depth='Depth';
+%     roms.res.hycom_time='MT';
+%     roms.res.hycom_t0=datenum(1900,12,31);
+%     roms.res.hycom_tunit=1; 
+%     roms.res.hycom_u='u';
+%     roms.res.hycom_v='v';
+%     roms.res.hycom_temp='temperature'; 
+%     roms.res.hycom_salt='salinity';
+%     roms.res.hycom_surface_elevation='ssh'; 
     %SWAN数据
     swan.multi_1_glo_30m='data';
     %% 被动示踪剂

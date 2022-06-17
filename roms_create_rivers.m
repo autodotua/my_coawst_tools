@@ -1,6 +1,6 @@
 configs('rivers')
 roms.rivers.count=5;
-roms.rivers.time=[0:roms.time.days];
+roms.rivers.time=[0:720];
 roms.rivers.direction=ones(roms.rivers.count,1)*2;
 roms.rivers.location= [
     0      57   %七堡 钱塘江
@@ -25,7 +25,7 @@ dyes=[
     5.2   9   12   14    17 %COD
     0.065  0.05   0.148  0.192  0.059 %总磷
     2.04 2.5 3.52  2.26  0.91 %总氮
-    ];
+    ]/1000;
 
 roms.rivers.dye=cell(roms.tracer.count,1);
 for i=1:roms.tracer.count

@@ -61,6 +61,7 @@ function roms_create_rivers_core(roms)
         var_name=['river_dye_',num2str(i,'%02d')];
         id = netcdf.defVar(nc,var_name,'double',[river_id,s_rho_id,river_time_id]);
         netcdf.putAtt(nc,id,'long_name',var_name);
+        netcdf.putAtt(nc,id,'units','kilogram meter-3');
         netcdf.putAtt(nc,id,'time','river_time');
 
     end
