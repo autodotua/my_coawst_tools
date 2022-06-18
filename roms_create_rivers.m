@@ -1,15 +1,21 @@
-configs('rivers')
+configs
 roms.rivers.count=5;
 roms.rivers.time=[0:720];
 roms.rivers.direction=ones(roms.rivers.count,1)*2;
 roms.rivers.location= [
-    0      57   %七堡 钱塘江
-    31    41   %曹娥江大闸闸前
-    51    72   %长山闸一号桥
-    12    59   %上塘河排涝闸
-    91    56   %四灶浦闸
+    1      58   %七堡 钱塘江
+    32    48   %曹娥江大闸闸前
+    53    77   %长山闸一号桥
+    14    66   %上塘河排涝闸
+    92    62   %四灶浦闸
     %160 50
-    ];
+    ]-1;
+mask=ncread(roms.input.grid,'mask_rho');
+for loc=roms.rivers.location'
+    if mask(loc(1)+1,loc(2)+1)==0
+        error(['点',num2str(loc),'在陆地上'])
+    end
+end
 roms.rivers.transport=ones(roms.rivers.count,numel(roms.rivers.time));
 roms.rivers.transport(1,:)=1403;
 roms.rivers.transport(2,:)=124;

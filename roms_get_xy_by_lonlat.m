@@ -5,4 +5,4 @@ locations=[
 "120.548448,30.401077" %上塘河排涝闸
 "121.374004,30.360253" %四灶浦闸
 ];
-roms_get_xy_by_lonlat_core(locations);
+roms_get_xy_by_lonlat_core(locations,"rho",false);

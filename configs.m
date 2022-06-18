@@ -1,9 +1,9 @@
-function configs(type)
-    arguments
-        type (1,1) string {mustBeMember(type,{'normal','rivers','tracer'})} = 'normal'
-    end
+function configs %(type)
+    %     arguments
+    %         type (1,1) string {mustBeMember(type,{'normal','rivers','tracer'})} = 'normal'
+    %     end
     clear roms swan
-    type=string(type);
+    %type=string(type);
 
     %% 路径
 
@@ -79,14 +79,14 @@ function configs(type)
     %包含ncep的fnl气象场的目录
     roms.res.force_ncep_dir="ncep";
     %全球地形文件
-        roms.res.elevation='data/SRTM15_V2.4.nc';
-        roms.res.elevation_longitude='lon';
-        roms.res.elevation_latitude='lat';
-        roms.res.elevation_altitude='z';
-%     roms.res.elevation='data/ETOPO1_Bed_c_gmt4.grd';
-%     roms.res.elevation_longitude='x';
-%     roms.res.elevation_latitude='y';
-%     roms.res.elevation_altitude='z';
+    roms.res.elevation='data/SRTM15_V2.4.nc';
+    roms.res.elevation_longitude='lon';
+    roms.res.elevation_latitude='lat';
+    roms.res.elevation_altitude='z';
+    %     roms.res.elevation='data/ETOPO1_Bed_c_gmt4.grd';
+    %     roms.res.elevation_longitude='x';
+    %     roms.res.elevation_latitude='y';
+    %     roms.res.elevation_altitude='z';
     %全球海岸线文件
     roms.res.gshhs_f='data/gshhs_f.b';
     %潮汐水平运动文件
@@ -94,7 +94,7 @@ function configs(type)
     %潮汐高度文件
     roms.res.tpx_h='data/tpx_h.mat';
     %水文数据的URL
-    roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBv0.08/expt_93.0'; 
+    roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBv0.08/expt_93.0';
     roms.res.hycom_latitude='lat';
     roms.res.hycom_longitude='lon';
     roms.res.hycom_depth='depth';
@@ -106,73 +106,73 @@ function configs(type)
     roms.res.hycom_temp='water_temp'; %temperature
     roms.res.hycom_salt='salinity'; %salinity
     roms.res.hycom_surface_elevation='surf_el'; %ssh
-% 
-%     roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBa0.08/expt_91.2'; 
-%     roms.res.hycom_latitude='Latitude';
-%     roms.res.hycom_longitude='Longitude';
-%     roms.res.hycom_depth='Depth';
-%     roms.res.hycom_time='MT';
-%     roms.res.hycom_t0=datenum(1900,12,31);
-%     roms.res.hycom_tunit=1; 
-%     roms.res.hycom_u='u';
-%     roms.res.hycom_v='v';
-%     roms.res.hycom_temp='temperature'; 
-%     roms.res.hycom_salt='salinity';
-%     roms.res.hycom_surface_elevation='ssh'; 
+    %
+    %     roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBa0.08/expt_91.2';
+    %     roms.res.hycom_latitude='Latitude';
+    %     roms.res.hycom_longitude='Longitude';
+    %     roms.res.hycom_depth='Depth';
+    %     roms.res.hycom_time='MT';
+    %     roms.res.hycom_t0=datenum(1900,12,31);
+    %     roms.res.hycom_tunit=1;
+    %     roms.res.hycom_u='u';
+    %     roms.res.hycom_v='v';
+    %     roms.res.hycom_temp='temperature';
+    %     roms.res.hycom_salt='salinity';
+    %     roms.res.hycom_surface_elevation='ssh';
     %SWAN数据
     swan.multi_1_glo_30m='data';
     %% 被动示踪剂
-    if type=="rivers" || type=="tracer"
-        %示踪剂数量（变量的数量）
-        roms.tracer.count=3;
-        %示踪剂的密度
-        roms.tracer.densities=cell(roms.tracer.count,1);
-        for i=1:numel(roms.tracer.densities)
-            roms.tracer.densities{i}=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
-        end
+    %if type=="rivers" || type=="tracer"
+    %示踪剂数量（变量的数量）
+    roms.tracer.count=3;
+    %示踪剂的密度
+    roms.tracer.densities=cell(roms.tracer.count,1);
+    for i=1:numel(roms.tracer.densities)
+        roms.tracer.densities{i}=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
     end
+    %end
     %% 河流
-    if type=="rivers"
-        %河流数量
-        roms.rivers.count=1;
-        %河流的流向，0为u方向，1为v方向，2为w方向
-        roms.rivers.direction=ones(roms.rivers.count,1)*2;
-        %定义时间，开始时间为0时刻。
-        roms.rivers.time=[0:roms.time.days];
-        %河流的位置，每一行为一条河流的水平坐标值
-        roms.rivers.location=zeros(roms.rivers.count,2);
-        %不同时间的河流流量，每一行一条河流，列数为时间数。
-        roms.rivers.transport=ones(roms.rivers.count,numel(roms.rivers.time));
-        %不同垂直层之间的流量分配，每一行为一条河流，每条河流流量总和为1。
-        roms.rivers.v_shape=ones(roms.rivers.count,roms.grid.N)/roms.grid.N;
-        %温度数据
-        roms.rivers.temp=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
-        %盐度数据
-        roms.rivers.salt=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
-        %被动示踪剂数据，数量应和roms.tracer.count相同。
-        roms.rivers.dye=cell(roms.tracer.count,1); 
-    
-        for i=1:numel(roms.rivers.dye)
-              roms.rivers.dye{i}=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
-        end
+    %if type=="rivers"
+    %河流数量
+    roms.rivers.count=1;
+    %河流的流向，0为u方向，1为v方向，2为w方向
+    roms.rivers.direction=ones(roms.rivers.count,1)*2;
+    %定义时间，开始时间为0时刻。
+    roms.rivers.time=[0:roms.time.days];
+    %河流的位置，每一行为一条河流的水平坐标值
+    roms.rivers.location=zeros(roms.rivers.count,2);
+    %不同时间的河流流量，每一行一条河流，列数为时间数。
+    roms.rivers.transport=ones(roms.rivers.count,numel(roms.rivers.time));
+    %不同垂直层之间的流量分配，每一行为一条河流，每条河流流量总和为1。
+    roms.rivers.v_shape=ones(roms.rivers.count,roms.grid.N)/roms.grid.N;
+    %温度数据
+    roms.rivers.temp=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
+    %盐度数据
+    roms.rivers.salt=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
+    %被动示踪剂数据，数量应和roms.tracer.count相同。
+    roms.rivers.dye=cell(roms.tracer.count,1);
+
+    for i=1:numel(roms.rivers.dye)
+        roms.rivers.dye{i}=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
     end
+    %end
 
     %% SWAN强迫
     %分辨率
     swan.forcing.specres=40;
 
     %% 导出变量
-    configs_check(roms,swan,type)
+    configs_check(roms,swan)
     assignin('caller','roms',roms);
     assignin('caller','swan',swan);
 end
 
 %% 检查
-function configs_check(roms,swan,type)
+function configs_check(roms,swan)
     arguments
         roms,
         swan,
-        type (1,:) char {mustBeMember(type,{'normal','rivers','tracer'})} = 'normal'
+        %type (1,:) char {mustBeMember(type,{'normal','rivers','tracer'})} = 'normal'
     end
     is_true(isfolder(roms.project_dir),"roms.project_dir指定的目录不存在")
 
@@ -197,35 +197,35 @@ function configs_check(roms,swan,type)
     is_in(roms.grid.Vtransform,[1,2])
     is_in(roms.grid.Vstretching,[1:4])
 
-    if type=="rivers" || type=="tracer"
-        is_size_of(roms.tracer.densities,[roms.tracer.count,1])
-        is_all_size_of(roms.tracer.densities,[roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N])
-    end
+    %if type=="rivers" || type=="tracer"
+    is_size_of(roms.tracer.densities,[roms.tracer.count,1])
+    is_all_size_of(roms.tracer.densities,[roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N])
+    %end
 
-    if type=="rivers"
-        is_size_of(roms.rivers.count,1)
-        is_positive_integer(roms.rivers.count)
-        is_size_of(roms.rivers.direction,[roms.rivers.count,1])
-        is_in(roms.rivers.direction,[0:2])
-        is_natural_integer(roms.rivers.time)
-        is_size_of(roms.rivers.location,[roms.rivers.count,2])
-        is_natural_integer(roms.rivers.location)
-        is_size_of(roms.rivers.transport,[roms.rivers.count,numel(roms.rivers.time)])
-        is_natural_integer(roms.rivers.transport)
-        is_size_of(roms.rivers.v_shape,[roms.rivers.count,roms.grid.N])
-        is_zero_or_positive(roms.rivers.v_shape)
-        is_equal(round(sum(roms.rivers.v_shape,2),5),ones(roms.rivers.count,1),"roms.rivers.v_shape每一行的和应为1",true)
-        is_size_of(roms.rivers.temp,[roms.rivers.count,roms.grid.N,numel(roms.rivers.time)])
-        is_true(roms.rivers.temp>=-20,"存在低于-20℃的温度",true)
-        is_true(roms.rivers.temp<=40,"存在高于40℃的温度",true)
-        is_size_of(roms.rivers.salt,[roms.rivers.count,roms.grid.N,numel(roms.rivers.time)])
-        is_zero_or_positive(roms.rivers.salt)
-        is_size_of(roms.rivers.dye,[roms.tracer.count,1])
-        is_all_size_of(roms.rivers.dye,[roms.rivers.count,roms.grid.N,numel(roms.rivers.time)])
+    %if type=="rivers"
+    is_size_of(roms.rivers.count,1)
+    is_positive_integer(roms.rivers.count)
+    is_size_of(roms.rivers.direction,[roms.rivers.count,1])
+    is_in(roms.rivers.direction,[0:2])
+    is_natural_integer(roms.rivers.time)
+    is_size_of(roms.rivers.location,[roms.rivers.count,2])
+    is_natural_integer(roms.rivers.location)
+    is_size_of(roms.rivers.transport,[roms.rivers.count,numel(roms.rivers.time)])
+    is_natural_integer(roms.rivers.transport)
+    is_size_of(roms.rivers.v_shape,[roms.rivers.count,roms.grid.N])
+    is_zero_or_positive(roms.rivers.v_shape)
+    is_equal(round(sum(roms.rivers.v_shape,2),5),ones(roms.rivers.count,1),"roms.rivers.v_shape每一行的和应为1",true)
+    is_size_of(roms.rivers.temp,[roms.rivers.count,roms.grid.N,numel(roms.rivers.time)])
+    is_true(roms.rivers.temp>=-20,"存在低于-20℃的温度",true)
+    is_true(roms.rivers.temp<=40,"存在高于40℃的温度",true)
+    is_size_of(roms.rivers.salt,[roms.rivers.count,roms.grid.N,numel(roms.rivers.time)])
+    is_zero_or_positive(roms.rivers.salt)
+    is_size_of(roms.rivers.dye,[roms.tracer.count,1])
+    is_all_size_of(roms.rivers.dye,[roms.rivers.count,roms.grid.N,numel(roms.rivers.time)])
 
-        is_size_of(swan.forcing.specres,1)
-        is_positive_integer(swan.forcing.specres)
-    end
+    is_size_of(swan.forcing.specres,1)
+    is_positive_integer(swan.forcing.specres)
+    %end
     disp("参数验证成功")
 end
 

@@ -151,7 +151,12 @@ function roms_create_clm_bdy_ini_HYCOM
         end
     end
 
+    if roms.tracer.count>0
+        roms_add_tracer
+    end
     !del roms_clm_*.nc
     !del roms_bdy_*.nc
+    !del u.mat
+    !del v.mat
     toc
 end

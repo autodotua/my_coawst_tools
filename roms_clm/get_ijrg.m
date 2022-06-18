@@ -26,6 +26,7 @@ elseif (Vtransform==2)
 end
 Sinp.hc          =hc;           %stretching width used in ROMS
 gn=get_roms_grid(modelgrid,Sinp);
+gn.h(gn.h<Tcline)=Tcline;
 gn.z_r=shiftdim(gn.z_r,2);
 gn.z_u=shiftdim(gn.z_u,2);
 gn.z_v=shiftdim(gn.z_v,2);
