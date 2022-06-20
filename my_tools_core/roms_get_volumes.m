@@ -1,4 +1,4 @@
-function r=get_volumes %获取每一个网格的水的体积
+function r=roms_get_volumes %获取每一个网格的水的体积
     configs
     sc_w=ncread(fullfile(roms.project_dir,roms.input.initialization),'sc_w');
     h=ncread(fullfile(roms.project_dir,roms.input.grid),'h');

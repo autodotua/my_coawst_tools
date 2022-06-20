@@ -15,7 +15,7 @@ else
 end
 s=size(data);
 if tovolume
-    v=get_volumes;
+    v=roms_get_volumes;
     for i=1:s(4)
         data(:,:,:,i)=data(:,:,:,i).*v;
     end

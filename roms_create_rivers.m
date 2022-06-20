@@ -3,11 +3,11 @@ roms.rivers.count=5;
 roms.rivers.time=[0:720];
 roms.rivers.direction=ones(roms.rivers.count,1)*2;
 roms.rivers.location= [
-    1      58   %七堡 钱塘江
-    32    48   %曹娥江大闸闸前
-    53    77   %长山闸一号桥
-    14    66   %上塘河排涝闸
-    92    62   %四灶浦闸
+    1      115   %七堡 钱塘江
+    64    94   %曹娥江大闸闸前
+    106    153   %长山闸一号桥
+    28    131   %上塘河排涝闸
+    182    122   %四灶浦闸
     %160 50
     ]-1;
 mask=ncread(roms.input.grid,'mask_rho');
@@ -24,7 +24,7 @@ roms.rivers.transport(4,:)=80; %？
 roms.rivers.transport(5,:)=50; %？
 
 roms.rivers.v_shape=ones(roms.rivers.count,roms.grid.N)/roms.grid.N;
-roms.rivers.temp=16*ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
+roms.rivers.temp=8*ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
 roms.rivers.salt=0.1*ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
 
 dyes=[

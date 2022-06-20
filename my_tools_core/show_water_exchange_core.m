@@ -5,7 +5,7 @@ function show_water_exchange_core(dye,zones,count)
         count(1,1) double
     end
     configs
-    v=get_volumes;
+    v=roms_get_volumes;
     s=size(dye);
     dye(isnan(dye))=0;%将NaN转为0方便计算
     sum_dye_w=sum(dye(:,:,:,1).*v,'all'); %初始时刻的示踪剂总质量
