@@ -1,4 +1,4 @@
-function nc_dem_clip(input,output,xvar,yvar,zvar,xrange,yrange)
+function nc_dem_clip_core(input,output,xvar,yvar,zvar,xrange,yrange)
     arguments
         input(1,1) string
         output(1,1) string

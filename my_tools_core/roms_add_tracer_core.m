@@ -1,11 +1,11 @@
-function roms_add_tracer_core(roms)
+function roms_add_tracer_core(roms,svar,timevar)
     cd(roms.project_dir)
     info=ncinfo(roms.input.initialization);
     nc=netcdf.open(roms.input.initialization,'WRITE');
     xrho_id=netcdf.inqDimID(nc,'xrho');
     erho_id=netcdf.inqDimID(nc,'erho');
-    sc_r_id=netcdf.inqDimID(nc,'sc_r');
-    time_id=netcdf.inqDimID(nc,'time');
+    sc_r_id=netcdf.inqDimID(nc,svar);
+    time_id=netcdf.inqDimID(nc,timevar);
     for i=1:roms.tracer.count
         var_name=['dye_',num2str(i,'%02d')];
         if(any(ismember( {info.Variables.Name},var_name)))

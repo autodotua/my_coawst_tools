@@ -169,7 +169,7 @@ else
       roms_stdlev = data;
       
     case 'u'
-      disp('但正在平均到 u 点网格')
+      disp('正在平均到 u 点网格')
       [LL,MM] = size(romslon);
       switch ndims(roms_stdlev)
         case 4
@@ -181,7 +181,7 @@ else
       end
       
     case 'v'
-      disp('但正在平均到 v 点网格')
+      disp('正在平均到 v 点网格')
       [LL,MM] = size(romslon);
       switch ndims(roms_stdlev)
         case 4

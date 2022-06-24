@@ -33,4 +33,4 @@ h=ncread(fullfile(roms.project_dir,roms.input.grid),'mask_rho');
 
 roms.tracer.densities={d1,d1,d1};
 
-roms_add_tracer_core(roms)
+roms_add_tracer_core(roms,'sc_r','time');

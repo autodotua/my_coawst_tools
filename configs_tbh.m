@@ -15,7 +15,7 @@ function configs %(type)
 
     %% 时间
     %开始时间
-    roms.time.start=[2019,9,1,0,0,0];
+    roms.time.start=[2019,9,4,0,0,0];
     %结束时间
     roms.time.stop=[2019,9,6,0,0,0];
     %开始时刻的简化儒略日
@@ -32,16 +32,16 @@ function configs %(type)
     %纬度范围
     roms.grid.latitude=[24,33];
     %网格数量，与in文件Lm和Mm的相同，比rho、xi_v、eta_u少2，比xi_u、eta_v、psi少1
-    roms.grid.size=[1000,1000];
+    roms.grid.size=[518,428];
     %垂向分层
-    roms.grid.N           = 10;
+    roms.grid.N           = 15;
     %地形跟随坐标θs参数
-    roms.grid.theta_s     =  1.0;
+    roms.grid.theta_s     =  8;
     %地形跟随坐标θb参数
-    roms.grid.theta_b     =  0.4;
+    roms.grid.theta_b     =  4;
     %地形跟随坐标最小值
-    roms.grid.Tcline      = 1.0;
-    roms.grid.Hmin      =1.0;
+    roms.grid.Tcline      = 10;
+    roms.grid.Hmin      =10;
     %地形跟随坐标Vtransform参数
     roms.grid.Vtransform  =  2;
     %地形跟随坐标Vstretching参数
@@ -77,22 +77,22 @@ function configs %(type)
 
     %% 数据资源路径
     %包含ncep的fnl气象场的目录
-    roms.res.force_ncep_dir="../hzw/ncep";
+    roms.res.force_ncep_dir="../hzw/data/ncep";
     %全球地形文件
-    roms.res.elevation='data/SRTM15_V2.4.nc';
+    roms.res.elevation='../hzw/data/SRTM15_V2.4.nc';
     roms.res.elevation_longitude='lon';
     roms.res.elevation_latitude='lat';
     roms.res.elevation_altitude='z';
-    roms.res.elevation='data/ETOPO1_Bed_c_gmt4.grd';
+    roms.res.elevation='../hzw/data/ETOPO1_Bed_c_gmt4.grd';
     roms.res.elevation_longitude='x';
     roms.res.elevation_latitude='y';
     roms.res.elevation_altitude='z';
     %全球海岸线文件
     roms.res.gshhs_f='data/gshhs_f.b';
     %潮汐水平运动文件
-    roms.res.tpx_uv='data/tpx_uv.mat';
+    roms.res.tpx_uv='../hzw/data/tpx_uv.mat';
     %潮汐高度文件
-    roms.res.tpx_h='data/tpx_h.mat';
+    roms.res.tpx_h='../hzw/data/tpx_h.mat';
     %水文数据的URL
     roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBv0.08/expt_93.0';
     roms.res.hycom_latitude='lat';
@@ -120,7 +120,7 @@ function configs %(type)
     %     roms.res.hycom_salt='salinity';
     %     roms.res.hycom_surface_elevation='ssh';
     %SWAN数据
-    swan.multi_1_glo_30m='data';
+    swan.multi_1_glo_30m='../hzw/data';
     %% 被动示踪剂
     %if type=="rivers" || type=="tracer"
     %示踪剂数量（变量的数量）

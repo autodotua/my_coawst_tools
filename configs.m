@@ -15,9 +15,9 @@ function configs %(type)
 
     %% 时间
     %开始时间
-    roms.time.start=[2018,1,1,0,0,0];
+    roms.time.start=[2018,1,2,0,0,0];
     %结束时间
-    roms.time.stop=[2018,1,2,0,0,0];
+    roms.time.stop=[2018,1,3,0,0,0];
     %开始时刻的简化儒略日
     roms.time.start_julian=juliandate(datetime(roms.time.start),'modifiedjuliandate');
     %结束时刻的简化儒略日
@@ -32,20 +32,20 @@ function configs %(type)
     %纬度范围
     roms.grid.latitude=[29.86,31.13];
     %网格数量，与in文件Lm和Mm的相同，比rho、xi_v、eta_u少2，比xi_u、eta_v、psi少1
-    roms.grid.size=[200,140];
+    roms.grid.size=[158,118];
     %垂向分层
     roms.grid.N           = 10;
     %地形跟随坐标θs参数
-    roms.grid.theta_s     =  8.0;
+    roms.grid.theta_s     =  0.4;
     %地形跟随坐标θb参数
-    roms.grid.theta_b     =  4.0;
+    roms.grid.theta_b     =  1.0;
     %地形跟随坐标最小值
-    roms.grid.Tcline      = 3.0;
-    roms.grid.Hmin      =3.0;
+    roms.grid.Tcline      = 10.0;
+    roms.grid.Hmin      =10.0;
     %地形跟随坐标Vtransform参数
-    roms.grid.Vtransform  =  2;
+    roms.grid.Vtransform  =  1;
     %地形跟随坐标Vstretching参数
-    roms.grid.Vstretching =  4;
+    roms.grid.Vstretching =  1;
 
 
 
@@ -77,7 +77,7 @@ function configs %(type)
 
     %% 数据资源路径
     %包含ncep的fnl气象场的目录
-    roms.res.force_ncep_dir="ncep";
+    roms.res.force_ncep_dir="data/ncep";
     %全球地形文件
     roms.res.elevation='data/SRTM15_V2.4.nc';
     roms.res.elevation_longitude='lon';
@@ -95,11 +95,13 @@ function configs %(type)
     roms.res.tpx_h='data/tpx_h.mat';
     %水文数据的URL
     roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBv0.08/expt_93.0';
+    roms.res.hycom_local='C:\Users\autod\OneDrive\大学\coawst_tools\my_tools_temp';
     roms.res.hycom_latitude='lat';
     roms.res.hycom_longitude='lon';
     roms.res.hycom_depth='depth';
     roms.res.hycom_time='time'; %MT
-    roms.res.hycom_t0=datenum(2000,1,1);%datenum(1900,12,31);
+    roms.res.hycom_t0dt=datetime(2000,1,1);
+    roms.res.hycom_t0=datenum(roms.res.hycom_t0dt);%datenum(1900,12,31);
     roms.res.hycom_tunit=24; %1
     roms.res.hycom_u='water_u'; %u
     roms.res.hycom_v='water_v'; %v
