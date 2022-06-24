@@ -1,7 +1,31 @@
-function [outputArg1,outputArg2] = merge_clms(inputArg1,inputArg2)
-    %MERGE_CLMS 此处显示有关此函数的摘要
-    %   此处显示详细说明
-    outputArg1 = inputArg1;
-    outputArg2 = inputArg2;
+function merge_clms(times)
+    configs
+    filenames="hycom_"+string(times,"yyyyMMddHH")+".nc";
+
+    [roms_grid_info,~]=get_hycom_info( ...
+        filenames(1),roms.input.grid,roms.grid,[]);
+
+    create_clm_nc(roms.input.climatology,times,roms_grid_info);
+    info=ncinfo(roms.input.climatology);
+    out=roms.input.climatology;
+    for i=1:length(filenames)
+        in=filenames(i);
+        disp("正在合并："+in)
+        for var=info.Variables
+            switch length(var.Dimensions)
+                case 1
+                    ncwrite(out,var.Name,ncread(in,var.Name),i);
+                case 2
+                    try
+                    ncwrite(out,var.Name,ncread(in,var.Name),[1,i]);
+                    catch
+                    end
+                case 3
+                    ncwrite(out,var.Name,ncread(in,var.Name),[1,1,i]);
+                case 4
+                    ncwrite(out,var.Name,ncread(in,var.Name),[1,1,1,i]);
+            end
+        end
+    end
 end
 

@@ -12,7 +12,10 @@ function [roms_grid_info,hycom_info]=get_hycom_info(file,gridfile,gridinfo,xvar,
     roms_grid_info.z_u=shiftdim(roms_grid_info.z_u,2);
     roms_grid_info.z_v=shiftdim(roms_grid_info.z_v,2);
     roms_grid_info.z_w=shiftdim(roms_grid_info.z_w,2);
-
+    if isempty(xvar)
+        hycom_info=[];
+        return
+    end
     lon=ncread(file,xvar);
     lat=ncread(file,yvar);
     lat=lat';

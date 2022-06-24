@@ -15,9 +15,9 @@ function configs %(type)
 
     %% 时间
     %开始时间
-    roms.time.start=[2018,1,2,0,0,0];
+    roms.time.start=[2018,1,1,0,0,0];
     %结束时间
-    roms.time.stop=[2018,1,3,0,0,0];
+    roms.time.stop=[2018,1,31,0,0,0];
     %开始时刻的简化儒略日
     roms.time.start_julian=juliandate(datetime(roms.time.start),'modifiedjuliandate');
     %结束时刻的简化儒略日
@@ -96,6 +96,7 @@ function configs %(type)
     %水文数据的URL
     roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBv0.08/expt_93.0';
     roms.res.hycom_local='C:\Users\autod\OneDrive\大学\coawst_tools\my_tools_temp';
+    roms.res.hycom_local_step_hour=24;
     roms.res.hycom_latitude='lat';
     roms.res.hycom_longitude='lon';
     roms.res.hycom_depth='depth';

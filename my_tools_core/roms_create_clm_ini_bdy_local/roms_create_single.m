@@ -1,7 +1,7 @@
-function roms_create_single
+function roms_create_single(time)
     configs
     d=cd(roms.project_dir);
-    time=datetime(roms.time.start);
+    time=datetime(time);
     file=fullfile( roms.res.hycom_local, string(time,'yyyyMMddHH')+".nc");
     [roms_grid_info,hycom_info]=get_hycom_info( ...
         file,roms.input.grid,roms.grid, ...
