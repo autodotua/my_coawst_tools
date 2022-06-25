@@ -1,21 +1,4 @@
-function [roms_grid_info,hycom_info]=get_hycom_info(file,gridfile,gridinfo,xvar,yvar,zvar)
-    if (gridinfo.Vtransform==1)
-        h=ncread(gridfile,'h');
-        hmin=min(h(:));
-        hc=min(max(hmin,0),gridinfo.Tcline);
-    elseif (gridinfo.Vtransform==2)
-        hc=gridinfo.Tcline;
-    end
-    gridinfo.hc=hc;
-    roms_grid_info=get_roms_grid(gridfile,gridinfo);
-    roms_grid_info.z_r=shiftdim(roms_grid_info.z_r,2);
-    roms_grid_info.z_u=shiftdim(roms_grid_info.z_u,2);
-    roms_grid_info.z_v=shiftdim(roms_grid_info.z_v,2);
-    roms_grid_info.z_w=shiftdim(roms_grid_info.z_w,2);
-    if isempty(xvar)
-        hycom_info=[];
-        return
-    end
+function hycom_info=get_hycom_info(file,roms_grid_info,xvar,yvar,zvar)
     lon=ncread(file,xvar);
     lat=ncread(file,yvar);
     lat=lat';

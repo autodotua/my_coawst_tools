@@ -12,8 +12,9 @@ function result=interpolate_hycom_to_roms(file,var,roms_grid_info,hycom_info,typ
             levels,1 ]);
         value=zeros(levels,roms_grid_info.Lm+2,roms_grid_info.Mm+2);
         %进行z坐标上的平面插值，从HYCOM坐标转为ROMS坐标
+
+        disp(['正在插值HYCOM的',char(var),'数据']);
         for k=1:levels
-            disp(['正在插值HYCOM的',char(var),'数据，层：' num2str(k)]);
             tmp=double(squeeze(data(:,:,k)));
             F = scatteredInterpolant(X(:),Y(:),tmp(:));
             r = F(roms_grid_info.lon_rho,roms_grid_info.lat_rho);

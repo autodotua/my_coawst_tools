@@ -62,7 +62,7 @@ function roms_with_s_levels = roms_interpolate(roms_grid_info,hycom_z,data,type,
     % 检查数据是否按照从深到浅的顺序排列
     if hycom_z_level_count>1 && any(diff(hycom_z)<0)
         % 深度是由浅到深排列的，翻转一下
-        disp('反转zlevs，使其从深到浅排列');
+        % disp('反转zlevs，使其从深到浅排列');
         hycom_z = flipud(hycom_z);
         data = flip(data,ndims(data)-2);
     end
@@ -133,7 +133,7 @@ function roms_with_s_levels = roms_interpolate(roms_grid_info,hycom_z,data,type,
         roms_with_s_levels = roms_with_z_levels;
 
     else
-        disp('正在插值σ坐标')
+        %disp('正在插值σ坐标')
         zr = roms_grid_info.z_r;
         switch type
             case 'u'
@@ -148,14 +148,14 @@ function roms_with_s_levels = roms_interpolate(roms_grid_info,hycom_z,data,type,
 
             case 4
                 for l=1:time_step_count
-                    disp(['执行时间： ' int2str(l) ' / ' int2str(time_step_count)])
+                    %disp(['执行时间： ' int2str(l) ' / ' int2str(time_step_count)])
 
                     % interpolate a y-z plane each time
                     Nx = size(roms_with_s_levels,3);
                     for i=1:Nx % x index
 
                         if ~rem(i,20)
-                            disp(['执行中： i = ' int2str(i) ' /' int2str(Nx)])
+                            %disp(['执行中： i = ' int2str(i) ' /' int2str(Nx)])
                         end
 
                         z = squeeze(zr(:,i,:));
@@ -180,11 +180,6 @@ function roms_with_s_levels = roms_interpolate(roms_grid_info,hycom_z,data,type,
                 % interpolate a y-z plane each time
                 Nx = size(roms_with_s_levels,2);
                 for i=1:Nx % x index
-
-                    if ~rem(i,20)
-                        disp(['  执行中： i = ' int2str(i) ' / ' int2str(Nx)])
-                    end
-
                     z = squeeze(zr(:,i,:));
                     s = size(z,2);
                     x = repmat(1:s,[roms_level_count 1]);
@@ -202,10 +197,7 @@ function roms_with_s_levels = roms_interpolate(roms_grid_info,hycom_z,data,type,
 
                 end
         end
-
     end
-
-
 end
 
 
@@ -225,7 +217,7 @@ function roms_with_z_levels = convert_rho_to_uv(type,roms_grid, roms_with_z_leve
             end
 
         case 'v'
-            disp('正在平均到 v 点网格')
+            %disp('正在平均到 v 点网格')
             [~,s] = size(roms_grid);
             switch ndims(roms_with_z_levels)
                 case 4

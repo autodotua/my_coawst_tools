@@ -17,7 +17,7 @@ function configs %(type)
     %开始时间
     roms.time.start=[2018,1,1,0,0,0];
     %结束时间
-    roms.time.stop=[2018,1,31,0,0,0];
+    roms.time.stop=[2018,12,31,0,0,0];
     %开始时刻的简化儒略日
     roms.time.start_julian=juliandate(datetime(roms.time.start),'modifiedjuliandate');
     %结束时刻的简化儒略日

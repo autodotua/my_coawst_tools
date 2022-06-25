@@ -8,97 +8,116 @@ function create_clm_nc(file,time,roms_grid_info,u,v,ubar,vbar,temp,salt,zeta)
         M=MP-1;
 
         %定义维度
-        xrhodimID = netcdf.defDim(nc,'xrho',LP);
-        xudimID = netcdf.defDim(nc,'xu',L);
-        xvdimID = netcdf.defDim(nc,'xv',LP);
-        erhodimID = netcdf.defDim(nc,'erho',MP);
-        eudimID = netcdf.defDim(nc,'eu',MP);
-        evdimID = netcdf.defDim(nc,'ev',M);
-        s_rhodimID = netcdf.defDim(nc,'s_rho',roms_grid_info.N);
-        octdimID = netcdf.defDim(nc,'ocean_time',length(time));
+        xrho_dim = netcdf.defDim(nc,'xrho',LP);
+        xu_dim = netcdf.defDim(nc,'xu',L);
+        xv_dim = netcdf.defDim(nc,'xv',LP);
+        erho_dim = netcdf.defDim(nc,'erho',MP);
+        eu_dim = netcdf.defDim(nc,'eu',MP);
+        ev_dim = netcdf.defDim(nc,'ev',M);
+        srho_dim = netcdf.defDim(nc,'s_rho',roms_grid_info.N);
+        temp_time_dim = netcdf.defDim(nc,'temp_time',length(time));
+        salt_time_dim = netcdf.defDim(nc,'salt_time',length(time));
+        v2d_time_dim = netcdf.defDim(nc,'v2d_time',length(time));
+        v3d_time_dim = netcdf.defDim(nc,'v3d_time',length(time));
+        zeta_time_dim = netcdf.defDim(nc,'zeta_time',length(time));
 
         %定义变量
-        ocID = netcdf.defVar(nc,'ocean_time','double',octdimID);
-        netcdf.putAtt(nc,ocID,'long_name','wind field time');
-        netcdf.putAtt(nc,ocID,'units','days');
-        netcdf.putAtt(nc,ocID,'field','wave_time, scalar, series');
+        temp_time_var = netcdf.defVar(nc,'temp_time','double',temp_time_dim);
+        netcdf.putAtt(nc,temp_time_var,'long_name','temp_time');
+        netcdf.putAtt(nc,temp_time_var,'units','days');
+        netcdf.putAtt(nc,temp_time_var,'field','temp_time, scalar, series');
 
-        lonID = netcdf.defVar(nc,'lon_rho','float',[xrhodimID erhodimID]);
-        netcdf.putAtt(nc,lonID,'long_name','lon_rho');
-        netcdf.putAtt(nc,lonID,'units','degrees');
-        netcdf.putAtt(nc,lonID,'FillValue_',100000.);
-        netcdf.putAtt(nc,lonID,'missing_value',100000.);
-        netcdf.putAtt(nc,lonID,'field','xp, scalar, series');
 
-        latID = netcdf.defVar(nc,'lat_rho','float',[xrhodimID erhodimID]);
-        netcdf.putAtt(nc,latID,'long_name','lon_rho');
-        netcdf.putAtt(nc,latID,'units','degrees');
-        netcdf.putAtt(nc,latID,'FillValue_',100000.);
-        netcdf.putAtt(nc,latID,'missing_value',100000.);
-        netcdf.putAtt(nc,latID,'field','yp, scalar, series');
+        salt_time_var = netcdf.defVar(nc,'salt_time','double',salt_time_dim);
+        netcdf.putAtt(nc,salt_time_var,'long_name','salt_time');
+        netcdf.putAtt(nc,salt_time_var,'units','days');
+        netcdf.putAtt(nc,salt_time_var,'field','salt_time, scalar, series');
+        
+        v2d_time_var = netcdf.defVar(nc,'v2d_time','double',v2d_time_dim);
+        netcdf.putAtt(nc,v2d_time_var,'long_name','v2d_time');
+        netcdf.putAtt(nc,v2d_time_var,'units','days');
+        netcdf.putAtt(nc,v2d_time_var,'field','v2d_time, scalar, series');
 
-        zetID = netcdf.defVar(nc,'zeta','double',[xrhodimID erhodimID octdimID]);
-        netcdf.putAtt(nc,zetID,'long_name','zeta');
-        netcdf.putAtt(nc,zetID,'units','meter');
-        netcdf.putAtt(nc,zetID,'field','zeta, scalar, series');
+        v3d_time_var = netcdf.defVar(nc,'v3d_time','double',v3d_time_dim);
+        netcdf.putAtt(nc,v3d_time_var,'long_name','v3d_time');
+        netcdf.putAtt(nc,v3d_time_var,'units','days');
+        netcdf.putAtt(nc,v3d_time_var,'field','v3d_time, scalar, series');
 
-        salID = netcdf.defVar(nc,'salt','float',[xrhodimID erhodimID s_rhodimID octdimID]);
-        netcdf.putAtt(nc,salID,'long_name','salt');
-        netcdf.putAtt(nc,salID,'units','psu');
-        netcdf.putAtt(nc,salID,'field','salt, scalar, series');
+        zeta_time_var = netcdf.defVar(nc,'zeta_time','double',zeta_time_dim);
+        netcdf.putAtt(nc,zeta_time_var,'long_name','zeta_time');
+        netcdf.putAtt(nc,zeta_time_var,'units','days');
+        netcdf.putAtt(nc,zeta_time_var,'field','zeta_time, scalar, series');
 
-        tmpID = netcdf.defVar(nc,'temp','float',[xrhodimID erhodimID s_rhodimID octdimID]);
-        netcdf.putAtt(nc,tmpID,'long_name','temp');
-        netcdf.putAtt(nc,tmpID,'units','C');
-        netcdf.putAtt(nc,tmpID,'field','temp, scalar, series');
+        lon_var = netcdf.defVar(nc,'lon_rho','float',[xrho_dim erho_dim]);
+        netcdf.putAtt(nc,lon_var,'long_name','lon_rho');
+        netcdf.putAtt(nc,lon_var,'units','degrees');
+        netcdf.putAtt(nc,lon_var,'FillValue_',100000.);
+        netcdf.putAtt(nc,lon_var,'missing_value',100000.);
+        netcdf.putAtt(nc,lon_var,'field','xp, scalar, series');
 
-        uID = netcdf.defVar(nc,'u','float',[xudimID eudimID s_rhodimID octdimID]);
-        netcdf.putAtt(nc,uID,'long_name','velx');
-        netcdf.putAtt(nc,uID,'units','meter second-1');
-        netcdf.putAtt(nc,uID,'field','velx, scalar, series');
+        lat_var = netcdf.defVar(nc,'lat_rho','float',[xrho_dim erho_dim]);
+        netcdf.putAtt(nc,lat_var,'long_name','lon_rho');
+        netcdf.putAtt(nc,lat_var,'units','degrees');
+        netcdf.putAtt(nc,lat_var,'FillValue_',100000.);
+        netcdf.putAtt(nc,lat_var,'missing_value',100000.);
+        netcdf.putAtt(nc,lat_var,'field','yp, scalar, series');
 
-        vID = netcdf.defVar(nc,'v','float',[xvdimID evdimID s_rhodimID octdimID]);
-        netcdf.putAtt(nc,vID,'long_name','vely');
-        netcdf.putAtt(nc,vID,'units','meter second-1');
-        netcdf.putAtt(nc,vID,'field','vely, scalar, series');
+        zeta_var = netcdf.defVar(nc,'zeta','double',[xrho_dim erho_dim zeta_time_dim]);
+        netcdf.putAtt(nc,zeta_var,'long_name','zeta');
+        netcdf.putAtt(nc,zeta_var,'units','meter');
+        netcdf.putAtt(nc,zeta_var,'field','zeta, scalar, series');
 
-        ubID = netcdf.defVar(nc,'ubar','float',[xudimID eudimID octdimID]);
-        netcdf.putAtt(nc,ubID,'long_name','mean velx');
-        netcdf.putAtt(nc,ubID,'units','meter second-1');
-        netcdf.putAtt(nc,ubID,'field','mean velx, scalar, series');
+        salt_var = netcdf.defVar(nc,'salt','float',[xrho_dim erho_dim srho_dim salt_time_dim]);
+        netcdf.putAtt(nc,salt_var,'long_name','salt');
+        netcdf.putAtt(nc,salt_var,'units','psu');
+        netcdf.putAtt(nc,salt_var,'field','salt, scalar, series');
 
-        vbID = netcdf.defVar(nc,'vbar','float',[xvdimID evdimID octdimID]);
-        netcdf.putAtt(nc,vbID,'long_name','mean vely');
-        netcdf.putAtt(nc,vbID,'units','meter second-1');
-        netcdf.putAtt(nc,vbID,'field','mean vely, scalar, series');
+        temp_var = netcdf.defVar(nc,'temp','float',[xrho_dim erho_dim srho_dim temp_time_dim]);
+        netcdf.putAtt(nc,temp_var,'long_name','temp');
+        netcdf.putAtt(nc,temp_var,'units','C');
+        netcdf.putAtt(nc,temp_var,'field','temp, scalar, series');
+
+        u_var = netcdf.defVar(nc,'u','float',[xu_dim eu_dim srho_dim v3d_time_dim]);
+        netcdf.putAtt(nc,u_var,'long_name','velx');
+        netcdf.putAtt(nc,u_var,'units','meter second-1');
+        netcdf.putAtt(nc,u_var,'field','velx, scalar, series');
+
+        v_var = netcdf.defVar(nc,'v','float',[xv_dim ev_dim srho_dim v3d_time_dim]);
+        netcdf.putAtt(nc,v_var,'long_name','vely');
+        netcdf.putAtt(nc,v_var,'units','meter second-1');
+        netcdf.putAtt(nc,v_var,'field','vely, scalar, series');
+
+        ubar_var = netcdf.defVar(nc,'ubar','float',[xu_dim eu_dim v2d_time_dim]);
+        netcdf.putAtt(nc,ubar_var,'long_name','mean velx');
+        netcdf.putAtt(nc,ubar_var,'units','meter second-1');
+        netcdf.putAtt(nc,ubar_var,'field','mean velx, scalar, series');
+
+        vbar_var = netcdf.defVar(nc,'vbar','float',[xv_dim ev_dim v2d_time_dim]);
+        netcdf.putAtt(nc,vbar_var,'long_name','mean vely');
+        netcdf.putAtt(nc,vbar_var,'units','meter second-1');
+        netcdf.putAtt(nc,vbar_var,'field','mean vely, scalar, series');
 
         %写入数据
         if length(time)==1
             jtime=juliandate(time,'modifiedjuliandate');
-            lonid=netcdf.inqVarID(nc,'lon_rho');
-            netcdf.putVar(nc,lonid,roms_grid_info.lon_rho);
-            latid=netcdf.inqVarID(nc,'lat_rho');
-            netcdf.putVar(nc,latid,roms_grid_info.lat_rho);
-            tempid=netcdf.inqVarID(nc,'u');
-            netcdf.putVar(nc,tempid,shiftdim(u,1));
-            tempid=netcdf.inqVarID(nc,'v');
-            netcdf.putVar(nc,tempid,shiftdim(v,1));
-            tempid=netcdf.inqVarID(nc,'ocean_time');
-            netcdf.putVar(nc,tempid,jtime);
-            tempid=netcdf.inqVarID(nc,'ubar');
-            netcdf.putVar(nc,tempid,ubar);
-            tempid=netcdf.inqVarID(nc,'vbar');
-            netcdf.putVar(nc,tempid,vbar);
-            tempid=netcdf.inqVarID(nc,'temp');
-            netcdf.putVar(nc,tempid,shiftdim(temp,1));
-            tempid=netcdf.inqVarID(nc,'salt');
-            netcdf.putVar(nc,tempid,shiftdim(salt,1));
-            tempid=netcdf.inqVarID(nc,'zeta');
-            netcdf.putVar(nc,tempid,zeta);
+            netcdf.putVar(nc,lon_var,roms_grid_info.lon_rho);
+            netcdf.putVar(nc,lat_var,roms_grid_info.lat_rho);
+            netcdf.putVar(nc,u_var,shiftdim(u,1));
+            netcdf.putVar(nc,v_var,shiftdim(v,1));
+            netcdf.putVar(nc,temp_time_var,jtime);
+            netcdf.putVar(nc,salt_time_var,jtime);
+            netcdf.putVar(nc,zeta_time_var,jtime);
+            netcdf.putVar(nc,v3d_time_var,jtime);
+            netcdf.putVar(nc,v2d_time_var,jtime);
+            netcdf.putVar(nc,ubar_var,ubar);
+            netcdf.putVar(nc,vbar_var,vbar);
+            netcdf.putVar(nc,temp_var,shiftdim(temp,1));
+            netcdf.putVar(nc,salt_var,shiftdim(salt,1));
+            netcdf.putVar(nc,zeta_var,zeta);
         end
         netcdf.close(nc);
     catch ex
         netcdf.close(nc);
-        error(ex)
+        rethrow(ex)
     end
 end

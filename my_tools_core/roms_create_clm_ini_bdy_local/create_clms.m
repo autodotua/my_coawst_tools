@@ -1,3 +1,5 @@
+skip_existed=1;
+
 configs
 start=datetime(roms.time.start)+hours(roms.res.hycom_local_step_hour);
 stop=datetime(roms.time.stop);
@@ -10,6 +12,13 @@ for in=filenames
     end
 end
 for time=times
+    if skip_existed
+        name="clm_"+string(time,'yyyyMMddHH')+".nc";
+        if isfile(name)
+            disp("文件"+name+"已存在");
+            continue;
+        end
+    end
     disp("正在处理："+string(time,'yyyyMMddHH'))
     roms_create_single(time);
 end

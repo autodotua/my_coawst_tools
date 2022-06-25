@@ -3,8 +3,8 @@ function roms_create_single(time)
     d=cd(roms.project_dir);
     time=datetime(time);
     file=fullfile( roms.res.hycom_local, string(time,'yyyyMMddHH')+".nc");
-    [roms_grid_info,hycom_info]=get_hycom_info( ...
-        file,roms.input.grid,roms.grid, ...
+    roms_grid_info=get_roms_grid_info(roms.grid,roms.input.grid  );
+    hycom_info=get_hycom_info(file,roms_grid_info, ...
         roms.res.hycom_longitude,roms.res.hycom_latitude,roms.res.hycom_depth);
 
     hycom_time=ncread(file,roms.res.hycom_time);
@@ -20,7 +20,7 @@ function roms_create_single(time)
     zeta=interpolate_hycom_to_roms(file,roms.res.hycom_surface_elevation,roms_grid_info,hycom_info,'',2);
     temp=interpolate_hycom_to_roms(file,roms.res.hycom_temp,roms_grid_info,hycom_info,'rho',3);
     salt=interpolate_hycom_to_roms(file,roms.res.hycom_salt,roms_grid_info,hycom_info,'rho',3);
-    create_clm_nc("hycom_"+string(time,'yyyyMMddHH')+".nc",time,roms_grid_info, ...
+    create_clm_nc("clm_"+string(time,'yyyyMMddHH')+".nc",time,roms_grid_info, ...
         u,v,ubar,vbar,temp,salt,zeta);
     cd(d);
     disp('完成')
