@@ -327,7 +327,7 @@ function roms_create_force_NCEP
         dd = datestr(time(mm) + datenum(1858,11,17,0,0,0),'yyyymmddTHHMMSS');
         url = fullfile(roms.res.force_ncep_dir, ['fnl_',dd(1:8),'_',dd(10:11),'_',dd(12:13),'.grib2']);
         url=char(url);
-        disp(['getting NCEP fnl grib2 data at ',dd,])
+        disp(['正在处理：',dd,])
 
         if use_nctoolbox
             geo = ncgeodataset(url);

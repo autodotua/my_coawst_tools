@@ -1,4 +1,10 @@
-    function create_bdy(clm_file,output_bdy_file,roms_grid_info)
+function create_bdy(clm_file,output_bdy_file,roms_grid_info)
+    % 通过合并的气候文件，创建边界场文件
+    arguments
+        clm_file(1,1) string
+        output_bdy_file(1,1) string
+        roms_grid_info
+    end
 
     nc_clm=netcdf.open(clm_file,'NC_NOWRITE');
     nc_bdy=netcdf.create(output_bdy_file,bitor(0,4096));
@@ -222,9 +228,14 @@
         %% 关闭
         netcdf.close(nc_bdy);
         netcdf.close(nc_clm);
+
+        disp("完成创建："+output_bdy_file)
     catch ex
-        netcdf.close(nc_bdy);
-        netcdf.close(nc_clm);
+        try
+            netcdf.close(nc_bdy);
+            netcdf.close(nc_clm);
+        catch ex2
+        end
         rethrow(ex);
     end
 end

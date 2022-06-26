@@ -1,4 +1,11 @@
 function [ubar,vbar]=get_bar(roms_grid_info,u,v,theta)
+    % 获取UV压力
+    arguments
+        roms_grid_info
+        u(:,:,:) double
+        v(:,:,:) double
+        theta(1,1) double
+    end
     cc=roms_zint_mw(u,roms_grid_info);
     ubar=rho2u_2d_mw(u2rho_2d_mw(cc)./roms_grid_info.h);
     cc=roms_zint_mw(v,roms_grid_info);
