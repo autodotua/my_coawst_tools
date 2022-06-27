@@ -88,8 +88,14 @@ function roms_create_force_NCEP
 
         % 如果你想要更精细的分辨率从0.2可以调到0.1，单位是度.
         d=0.1;
-        lon_rho = [roms.grid.longitude(1):d:roms.grid.longitude(2)]+offset;
-        lat_rho = [ roms.grid.latitude(1):d:roms.grid.latitude(2) ];
+        lon_rho=ncread(roms.input.grid,'lon_rho');
+        lat_rho=ncread(roms.input.grid,'lat_rho');
+        lon_rho=[min(lon_rho(:)):d:max(lon_rho(:))];
+        lat_rho=[min(lat_rho(:)):d:max(lat_rho(:))];
+        lon_rho=[lon_rho,lon_rho(end)*2-lon_rho(end-1)];
+        lat_rho=[lat_rho,lat_rho(end)*2-lat_rho(end-1)];
+        %lon_rho = [roms.grid.longitude(1):d:roms.grid.longitude(2)]+offset;
+        %lat_rho = [ roms.grid.latitude(1):d:roms.grid.latitude(2) ];
         lon_rho = repmat(lon_rho,size(lat_rho,2),1)';
         lat_rho = repmat(lat_rho',1,size(lon_rho,1))';
         angle_rho = lon_rho*0;
@@ -120,7 +126,7 @@ function roms_create_force_NCEP
 
     [Lp,Mp] = size(lon_rho);
 
-    % determine date range（确定强迫场ocean_time的时间基准，时间步长，时间范围）
+    % determine date range（确定强迫场time的时间基准，时间步长，时间范围）
     time = [time_start:6/24:time_end] - datenum(1858,11,17,0,0,0);
     ntimes = length(time);
 
@@ -144,7 +150,7 @@ function roms_create_force_NCEP
     % variables and attributes
     disp(' ## Defining Variables and Attributes...')
 
-    tID = netcdf.defVar(nc,'ocean_time','double',t_dimID);
+    tID = netcdf.defVar(nc,'time','double',t_dimID);
     netcdf.putAtt(nc,tID,'long_name','atmospheric forcing time');
     netcdf.putAtt(nc,tID,'units','days');
     netcdf.putAtt(nc,tID,'field','time, scalar, series');
@@ -160,129 +166,129 @@ function roms_create_force_NCEP
     netcdf.putAtt(nc,latID,'field','yp, scalar, series');
 
     if get_Wind
-        wt_dimID = netcdf.defDim(nc,'wind_time',ntimes);
-        wtID = netcdf.defVar(nc,'wind_time','double',wt_dimID);
-        netcdf.putAtt(nc,wtID,'long_name','wind_time');
-        netcdf.putAtt(nc,wtID,'units','ocean_time');
-        %改为你的ROMS时间基准，下面的都要注意
-        netcdf.putAtt(nc,wtID,'field','wind_time, scalar, series');
+%         wt_dimID = netcdf.defDim(nc,'wind_time',ntimes);
+%         wtID = netcdf.defVar(nc,'wind_time','double',wt_dimID);
+%         netcdf.putAtt(nc,wtID,'long_name','wind_time');
+%         netcdf.putAtt(nc,wtID,'units','days');
+%         %改为你的ROMS时间基准，下面的都要注意
+%         netcdf.putAtt(nc,wtID,'field','wind_time, scalar, series');
 
-        UwindID = netcdf.defVar(nc,'Uwind','double',[lon_dimID lat_dimID wt_dimID]);
+        UwindID = netcdf.defVar(nc,'Uwind','double',[lon_dimID lat_dimID t_dimID]);
         netcdf.putAtt(nc,UwindID,'long_name','surface u-wind component');
         netcdf.putAtt(nc,UwindID,'units','meter second-1');
         netcdf.putAtt(nc,UwindID,'field','Uwind, scalar, series');
         netcdf.putAtt(nc,UwindID,'coordinates','lon lat');
-        netcdf.putAtt(nc,UwindID,'time','wind_time');
+        netcdf.putAtt(nc,UwindID,'time','time');
 
-        VwindID = netcdf.defVar(nc,'Vwind','double',[lon_dimID lat_dimID wt_dimID]);
+        VwindID = netcdf.defVar(nc,'Vwind','double',[lon_dimID lat_dimID t_dimID]);
         netcdf.putAtt(nc,VwindID,'long_name','surface v-wind component');
         netcdf.putAtt(nc,VwindID,'units','meter second-1');
         netcdf.putAtt(nc,VwindID,'field','Vwind, scalar, series');
         netcdf.putAtt(nc,VwindID,'coordinates','lon lat');
-        netcdf.putAtt(nc,VwindID,'time','wind_time');
+        netcdf.putAtt(nc,VwindID,'time','time');
     end
 
     if get_Pair
-        Pat_dimID = netcdf.defDim(nc,'pair_time',ntimes);
-        PatID = netcdf.defVar(nc,'pair_time','double',Pat_dimID);
-        netcdf.putAtt(nc,PatID,'long_name','pair_time');
-        netcdf.putAtt(nc,PatID,'units','days since 1858-11-17 00:00:00 UTC');
-        netcdf.putAtt(nc,PatID,'field','pair_time, scalar, series');
+%         Pat_dimID = netcdf.defDim(nc,'pair_time',ntimes);
+%         PatID = netcdf.defVar(nc,'pair_time','double',Pat_dimID);
+%         netcdf.putAtt(nc,PatID,'long_name','pair_time');
+%         netcdf.putAtt(nc,PatID,'units','days since 1858-11-17 00:00:00 UTC');
+%         netcdf.putAtt(nc,PatID,'field','pair_time, scalar, series');
 
-        PairID = netcdf.defVar(nc,'Pair','double',[lon_dimID lat_dimID Pat_dimID]);
+        PairID = netcdf.defVar(nc,'Pair','double',[lon_dimID lat_dimID t_dimID]);
         netcdf.putAtt(nc,PairID,'long_name','surface air pressure');
         netcdf.putAtt(nc,PairID,'units','millibar');
         netcdf.putAtt(nc,PairID,'field','Pair, scalar, series');
         netcdf.putAtt(nc,PairID,'coordinates','lon lat');
-        netcdf.putAtt(nc,PairID,'time','pair_time');
+        netcdf.putAtt(nc,PairID,'time','time');
     end
 
     if get_Tair
-        Tat_dimID = netcdf.defDim(nc,'tair_time',ntimes);
-        TatID = netcdf.defVar(nc,'tair_time','double',Tat_dimID);
-        netcdf.putAtt(nc,TatID,'long_name','tair_time');
-        netcdf.putAtt(nc,TatID,'units','days since 1858-11-17 00:00:00 UTC');
-        netcdf.putAtt(nc,TatID,'field','tair_time, scalar, series');
+%         Tat_dimID = netcdf.defDim(nc,'tair_time',ntimes);
+%         TatID = netcdf.defVar(nc,'tair_time','double',Tat_dimID);
+%         netcdf.putAtt(nc,TatID,'long_name','tair_time');
+%         netcdf.putAtt(nc,TatID,'units','days since 1858-11-17 00:00:00 UTC');
+%         netcdf.putAtt(nc,TatID,'field','tair_time, scalar, series');
 
-        TairID = netcdf.defVar(nc,'Tair','double',[lon_dimID lat_dimID Tat_dimID]);
+        TairID = netcdf.defVar(nc,'Tair','double',[lon_dimID lat_dimID t_dimID]);
         netcdf.putAtt(nc,TairID,'long_name','surface air temperature');
         netcdf.putAtt(nc,TairID,'units','Celsius');
         netcdf.putAtt(nc,TairID,'field','Tair, scalar, series');
         netcdf.putAtt(nc,TairID,'coordinates','lon lat');
-        netcdf.putAtt(nc,TairID,'time','tair_time');
+        netcdf.putAtt(nc,TairID,'time','time');
     end
 
     if get_Qair
-        Qat_dimID = netcdf.defDim(nc,'qair_time',ntimes);
-        QatID = netcdf.defVar(nc,'qair_time','double',Qat_dimID);
-        netcdf.putAtt(nc,QatID,'long_name','qair_time');
-        netcdf.putAtt(nc,QatID,'units','days since 1858-11-17 00:00:00 UTC');
-        netcdf.putAtt(nc,QatID,'field','qair_time, scalar, series');
+%         Qat_dimID = netcdf.defDim(nc,'qair_time',ntimes);
+%         QatID = netcdf.defVar(nc,'qair_time','double',Qat_dimID);
+%         netcdf.putAtt(nc,QatID,'long_name','qair_time');
+%         netcdf.putAtt(nc,QatID,'units','days since 1858-11-17 00:00:00 UTC');
+%         netcdf.putAtt(nc,QatID,'field','qair_time, scalar, series');
 
-        QairID = netcdf.defVar(nc,'Qair','double',[lon_dimID lat_dimID Qat_dimID]);
+        QairID = netcdf.defVar(nc,'Qair','double',[lon_dimID lat_dimID t_dimID]);
         netcdf.putAtt(nc,QairID,'long_name','surface air relative humidity');
         netcdf.putAtt(nc,QairID,'units','percentage');
         netcdf.putAtt(nc,QairID,'field','Qair, scalar, series');
         netcdf.putAtt(nc,QairID,'coordinates','lon lat');
-        netcdf.putAtt(nc,QairID,'time','qair_time');
+        netcdf.putAtt(nc,QairID,'time','time');
     end
 
     if get_rain
-        rt_dimID = netcdf.defDim(nc,'rain_time',ntimes);
-        rtID = netcdf.defVar(nc,'rain_time','double',rt_dimID);
-        netcdf.putAtt(nc,rtID,'long_name','rain_time');
-        netcdf.putAtt(nc,rtID,'units','days since 1858-11-17 00:00:00 UTC');
-        netcdf.putAtt(nc,rtID,'field','rain_time, scalar, series');
+%         rt_dimID = netcdf.defDim(nc,'rain_time',ntimes);
+%         rtID = netcdf.defVar(nc,'rain_time','double',rt_dimID);
+%         netcdf.putAtt(nc,rtID,'long_name','rain_time');
+%         netcdf.putAtt(nc,rtID,'units','days since 1858-11-17 00:00:00 UTC');
+%         netcdf.putAtt(nc,rtID,'field','rain_time, scalar, series');
 
-        rainID = netcdf.defVar(nc,'rain','double',[lon_dimID lat_dimID rt_dimID]);
+        rainID = netcdf.defVar(nc,'rain','double',[lon_dimID lat_dimID t_dimID]);
         netcdf.putAtt(nc,rainID,'long_name','rain fall rate');
         netcdf.putAtt(nc,rainID,'units','kilogram meter-2 second-1');
         netcdf.putAtt(nc,rainID,'field','rain, scalar, series');
         netcdf.putAtt(nc,rainID,'coordinates','lon lat');
-        netcdf.putAtt(nc,rainID,'time','rain_time');
+        netcdf.putAtt(nc,rainID,'time','time');
     end
 
     if get_swrad
-        swrt_dimID = netcdf.defDim(nc,'srf_time',ntimes);
-        swrtID = netcdf.defVar(nc,'srf_time','double',swrt_dimID);
-        netcdf.putAtt(nc,swrtID,'long_name','srf_time');
-        netcdf.putAtt(nc,swrtID,'units','days since 1858-11-17 00:00:00 UTC');
-        netcdf.putAtt(nc,swrtID,'field','srf_time, scalar, series');
+%         swrt_dimID = netcdf.defDim(nc,'srf_time',ntimes);
+%         swrtID = netcdf.defVar(nc,'srf_time','double',swrt_dimID);
+%         netcdf.putAtt(nc,swrtID,'long_name','srf_time');
+%         netcdf.putAtt(nc,swrtID,'units','days since 1858-11-17 00:00:00 UTC');
+%         netcdf.putAtt(nc,swrtID,'field','srf_time, scalar, series');
 
-        swradID = netcdf.defVar(nc,'swrad','double',[lon_dimID lat_dimID swrt_dimID]);
+        swradID = netcdf.defVar(nc,'swrad','double',[lon_dimID lat_dimID t_dimID]);
         netcdf.putAtt(nc,swradID,'long_name','net solar shortwave radiation');
         netcdf.putAtt(nc,swradID,'units','Watts meter-2');
         netcdf.putAtt(nc,swradID,'positive_value','downward flux, heating');
         netcdf.putAtt(nc,swradID,'negative_value','upward flux, cooling');
         netcdf.putAtt(nc,swradID,'field','swrad, scalar, series');
         netcdf.putAtt(nc,swradID,'coordinates','lon lat');
-        netcdf.putAtt(nc,swradID,'time','srf_time');
+        netcdf.putAtt(nc,swradID,'time','time');
     end
 
     if get_lwrad
-        lwrt_dimID = netcdf.defDim(nc,'lrf_time',ntimes);
-        lwrtID = netcdf.defVar(nc,'lrf_time','double',lwrt_dimID);
-        netcdf.putAtt(nc,lwrtID,'long_name','lrf_time');
-        netcdf.putAtt(nc,lwrtID,'units','days since 1858-11-17 00:00:00 UTC');
-        netcdf.putAtt(nc,lwrtID,'field','lrf_time, scalar, series');
+%         lwrt_dimID = netcdf.defDim(nc,'lrf_time',ntimes);
+%         lwrtID = netcdf.defVar(nc,'lrf_time','double',lwrt_dimID);
+%         netcdf.putAtt(nc,lwrtID,'long_name','lrf_time');
+%         netcdf.putAtt(nc,lwrtID,'units','days since 1858-11-17 00:00:00 UTC');
+%         netcdf.putAtt(nc,lwrtID,'field','lrf_time, scalar, series');
 
-        lwradID = netcdf.defVar(nc,'lwrad','double',[lon_dimID lat_dimID lwrt_dimID]);
+        lwradID = netcdf.defVar(nc,'lwrad','double',[lon_dimID lat_dimID t_dimID]);
         netcdf.putAtt(nc,lwradID,'long_name','net downward solar longwave radiation');
         netcdf.putAtt(nc,lwradID,'units','Watts meter-2');
         netcdf.putAtt(nc,lwradID,'positive_value','downward flux, heating');
         netcdf.putAtt(nc,lwradID,'negative_value','upward flux, cooling');
         netcdf.putAtt(nc,lwradID,'field','lwrad, scalar, series');
         netcdf.putAtt(nc,lwradID,'coordinates','lon lat');
-        netcdf.putAtt(nc,lwradID,'time','lrf_time');
+        netcdf.putAtt(nc,lwradID,'time','time');
 
-        lwradID = netcdf.defVar(nc,'lwrad_down','double',[lon_dimID lat_dimID lwrt_dimID]);
+        lwradID = netcdf.defVar(nc,'lwrad_down','double',[lon_dimID lat_dimID t_dimID]);
         netcdf.putAtt(nc,lwradID,'long_name','downward solar longwave radiation');
         netcdf.putAtt(nc,lwradID,'units','Watts meter-2');
         netcdf.putAtt(nc,lwradID,'positive_value','downward flux, heating');
         netcdf.putAtt(nc,lwradID,'negative_value','upward flux, cooling');
         netcdf.putAtt(nc,lwradID,'field','lwrad_down, scalar, series');
         netcdf.putAtt(nc,lwradID,'coordinates','lon lat');
-        netcdf.putAtt(nc,lwradID,'time','lrf_time');
+        netcdf.putAtt(nc,lwradID,'time','time');
     end
     netcdf.close(nc)
 
@@ -291,7 +297,7 @@ function roms_create_force_NCEP
     % write lon and lat
     ncwrite(roms.input.force,'lon',lon_rho);
     ncwrite(roms.input.force,'lat',lat_rho);
-    ncwrite(roms.input.force,'ocean_time',time);
+    ncwrite(roms.input.force,'time',time);
 
     % pre allocate some arrays
     fill = zeros([size(lon_rho) ntimes]);
@@ -443,36 +449,36 @@ function roms_create_force_NCEP
 
     nc = roms.input.force;
     if get_lwrad
-        ncwrite(nc,'lrf_time',time);
+        %ncwrite(nc,'lrf_time',time);
         ncwrite(nc,'lwrad',lwrad);
         ncwrite(nc,'lwrad_down',lwrad_down);
     end
     if get_swrad
-        ncwrite(nc,'srf_time',time);
+        %ncwrite(nc,'srf_time',time);
         ncwrite(nc,'swrad',swrad);
     end
     if get_rain
-        ncwrite(nc,'rain_time',time);
+        %ncwrite(nc,'rain_time',time);
         rain(rain<0) = 0;
         ncwrite(nc,'rain',rain);
     end
     if get_Tair
-        ncwrite(nc,'tair_time',time);
+        %ncwrite(nc,'tair_time',time);
         Tair(Tair<-100) = 0;
         ncwrite(nc,'Tair',Tair);
     end
     if get_Pair
-        ncwrite(nc,'pair_time',time);
+        %ncwrite(nc,'pair_time',time);
         Pair(Pair<0) = 0;
         ncwrite(nc,'Pair',Pair);
     end
     if get_Qair
-        ncwrite(nc,'qair_time',time);
+        %ncwrite(nc,'qair_time',time);
         Qair(Qair<0) = 0;
         ncwrite(nc,'Qair',Qair);
     end
     if get_Wind
-        ncwrite(nc,'wind_time',time);
+        %ncwrite(nc,'wind_time',time);
         Uwind(Uwind<-100) = 0;
         Vwind(Vwind<-100) = 0;
         ncwrite(nc,'Uwind',Uwind);
