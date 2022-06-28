@@ -15,6 +15,7 @@ function create_clm_nc(file,time,roms_grid_info,u,v,ubar,vbar,temp,salt,zeta)
         eu_dim = netcdf.defDim(nc,'eu',MP);
         ev_dim = netcdf.defDim(nc,'ev',M);
         srho_dim = netcdf.defDim(nc,'s_rho',roms_grid_info.N);
+        ocean_time_dim = netcdf.defDim(nc,'ocean_time',length(time));
         temp_time_dim = netcdf.defDim(nc,'temp_time',length(time));
         salt_time_dim = netcdf.defDim(nc,'salt_time',length(time));
         v2d_time_dim = netcdf.defDim(nc,'v2d_time',length(time));
@@ -22,6 +23,11 @@ function create_clm_nc(file,time,roms_grid_info,u,v,ubar,vbar,temp,salt,zeta)
         zeta_time_dim = netcdf.defDim(nc,'zeta_time',length(time));
 
         %定义变量
+        ocean_time_var = netcdf.defVar(nc,'ocean_time','double',ocean_time_dim);
+        netcdf.putAtt(nc,ocean_time_var,'long_name','ocean_time');
+        netcdf.putAtt(nc,ocean_time_var,'units','days');
+        netcdf.putAtt(nc,ocean_time_var,'field','ocean_time, scalar, series');
+
         temp_time_var = netcdf.defVar(nc,'temp_time','double',temp_time_dim);
         netcdf.putAtt(nc,temp_time_var,'long_name','temp_time');
         netcdf.putAtt(nc,temp_time_var,'units','days');
@@ -109,6 +115,7 @@ function create_clm_nc(file,time,roms_grid_info,u,v,ubar,vbar,temp,salt,zeta)
             netcdf.putVar(nc,zeta_time_var,jtime);
             netcdf.putVar(nc,v3d_time_var,jtime);
             netcdf.putVar(nc,v2d_time_var,jtime);
+            netcdf.putVar(nc,ocean_time_var,jtime);
             netcdf.putVar(nc,ubar_var,ubar);
             netcdf.putVar(nc,vbar_var,vbar);
             netcdf.putVar(nc,temp_var,shiftdim(temp,1));
