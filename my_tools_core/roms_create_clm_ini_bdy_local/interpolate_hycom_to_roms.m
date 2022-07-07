@@ -23,13 +23,19 @@ function result=interpolate_hycom_to_roms(file,var,roms_grid_info,hycom_info,typ
         value=zeros(levels,roms_grid_info.Lm+2,roms_grid_info.Mm+2);
         %进行z坐标上的平面插值，从HYCOM坐标转为ROMS坐标
 
-        disp(['正在插值HYCOM的',char(var),'数据']);
-        for k=1:levels
+        disp(['正在插值HYCOM的',char(var),'数据（共',num2str(levels),'层）']);
+        lon_rho=roms_grid_info.lon_rho;
+        lat_rho=roms_grid_info.lat_rho;
+        X2=X(:);
+        Y2=Y(:);
+        parfor k=1:levels
+            %fprintf([num2str(k),' '])
             tmp=double(squeeze(data(:,:,k))); %该层数据
-            F = scatteredInterpolant(X(:),Y(:),tmp(:)); %创建插值函数
-            r = F(roms_grid_info.lon_rho,roms_grid_info.lat_rho); %平面插值
+            F = scatteredInterpolant(X2,Y2,tmp(:)); %创建插值函数
+            r = F(lon_rho,lat_rho); %平面插值
             value(k,:,:)=maplev(r); %外插到全部位置。这个外插和scatteredInterpolant用的不太一样，效果更好
         end
+        %fprintf('\n');
         result=interpolate(roms_grid_info,hycom_info.depths,value,type,0); %在垂直方向上进行插值
     elseif dim==2 %二维数据，主要是zeta
         data=ncread(file,var, ...

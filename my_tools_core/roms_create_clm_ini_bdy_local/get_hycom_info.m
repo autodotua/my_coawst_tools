@@ -28,8 +28,8 @@ function hycom_info=get_hycom_info(file,roms_grid_info,xvar,yvar,zvar)
 
     lon_index1 = max(lon_index1, 1);
     lat_index1 = max(lat_index1, 1);
-    lon_index2 = min(lon_index2, length(lat));
-    lat_index2 = min(lat_index2, length(lon));
+    lon_index2 = min(lon_index2, length(lon));
+    lat_index2 = min(lat_index2, length(lat));
 
     %写入信息
     hycom_info.lons=double(lon(lon_index1:lon_index2));

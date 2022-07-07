@@ -17,7 +17,9 @@ function configs %(type)
     %开始时间
     roms.time.start=[2019,9,4,0,0,0];
     %结束时间
-    roms.time.stop=[2019,9,6,0,0,0];
+    roms.time.stop=[2019,9,7,0,0,0];
+    %基准时间，简化儒略历的开始时间
+    roms.time.base=[1858,11,17,0,0,0];
     %开始时刻的简化儒略日
     roms.time.start_julian=juliandate(datetime(roms.time.start),'modifiedjuliandate');
     %结束时刻的简化儒略日
@@ -76,8 +78,11 @@ function configs %(type)
 
 
     %% 数据资源路径
-    %包含ncep的fnl气象场的目录
     roms.res.force_ncep_dir="../hzw/data/ncep";
+    %气象强迫插值分辨率，单位为度，若为0，则使用ROMS网格
+    roms.res.force_ncep_resolution=0.1;
+    %气象强迫时间分辨率，单位为小时
+    roms.res.force_ncep_step=6;
     %全球地形文件
     roms.res.elevation='../hzw/data/SRTM15_V2.4.nc';
     roms.res.elevation_longitude='lon';
@@ -95,11 +100,13 @@ function configs %(type)
     roms.res.tpx_h='../hzw/data/tpx_h.mat';
     %水文数据的URL
     roms.res.hycom='http://tds.hycom.org/thredds/dodsC/GLBv0.08/expt_93.0';
-    roms.res.hycom_latitude='lat';
+    roms.res.hycom_local='C:\Users\autod\OneDrive\大学\coawst_tools\my_tools_temp';
+    roms.res.hycom_local_step_hour=24; roms.res.hycom_latitude='lat';
     roms.res.hycom_longitude='lon';
     roms.res.hycom_depth='depth';
     roms.res.hycom_time='time'; %MT
-    roms.res.hycom_t0=datenum(2000,1,1);%datenum(1900,12,31);
+    roms.res.hycom_t0dt=datetime(2000,1,1);
+    roms.res.hycom_t0=datenum(roms.res.hycom_t0dt);%datenum(1900,12,31);
     roms.res.hycom_tunit=24; %1
     roms.res.hycom_u='water_u'; %u
     roms.res.hycom_v='water_v'; %v
