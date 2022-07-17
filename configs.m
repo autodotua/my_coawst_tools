@@ -36,18 +36,18 @@ function configs %(type)
     %网格数量，与in文件Lm和Mm的相同，比rho、xi_v、eta_u少2，比xi_u、eta_v、psi少1
     roms.grid.size=[158,118];
     %垂向分层
-    roms.grid.N           = 10;
+    roms.grid.N           = 5;
     %地形跟随坐标θs参数
-    roms.grid.theta_s     =  0.4;
+    roms.grid.theta_s     =  8;
     %地形跟随坐标θb参数
-    roms.grid.theta_b     =  1.0;
+    roms.grid.theta_b     =  4;
     %地形跟随坐标最小值
-    roms.grid.Tcline      = 10.0;
-    roms.grid.Hmin      =10.0;
+    roms.grid.Tcline      = 20;
+    roms.grid.Hmin      =5;
     %地形跟随坐标Vtransform参数
-    roms.grid.Vtransform  =  1;
+    roms.grid.Vtransform  =  2;
     %地形跟随坐标Vstretching参数
-    roms.grid.Vstretching =  1;
+    roms.grid.Vstretching =  4;
 
 
 

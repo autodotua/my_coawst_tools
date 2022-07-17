@@ -1,4 +1,4 @@
-input="C:\Users\autod\Desktop\hzw\data\SRTM15_V2.4.nc";
-output="C:\Users\autod\Desktop\hzw\data\SRTM15_SUB.nc";
+input="C:\Users\autod\Desktop\gebco_2022_sub_ice_topo\GEBCO_2022_sub_ice_topo.nc";
+output="C:\Users\autod\Desktop\gebco_2022_sub_ice_topo\GEBCO_2022_sub_ice_topo_clip.nc";
 
-nc_dem_clip_core(input,output,'lon','lat','z',[120,124],[29,32])
+nc_dem_clip_core(input,output,'lon','lat','elevation',[120,124],[29,32])

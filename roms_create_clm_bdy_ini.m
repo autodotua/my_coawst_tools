@@ -1,10 +1,13 @@
 configs
-
-p=parcluster('local');
-p.NumWorkers=12;
-saveProfile(p);
-delete(gcp('nocreate'))
-p=parpool('local',12);
+roms_fix_h
+try
+    p=parcluster('local');
+    p.NumWorkers=12;
+    saveProfile(p);
+    delete(gcp('nocreate'))
+    p=parpool('local',12);
+catch
+end
 d=cd(roms.project_dir);
 start=datetime(roms.time.start);%+hours(roms.res.hycom_local_step_hour);
 stop=datetime(roms.time.stop);
