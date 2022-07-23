@@ -1,4 +1,4 @@
-function merge_clms(times)
+function filenames=merge_clms(times)
     configs
     filenames="clm_"+string(times,"yyyyMMddHH")+".nc";
 

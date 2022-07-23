@@ -1,4 +1,4 @@
-function create_clms(start,stop,step,skip_existed)
+function filenames=create_clms(start,stop,step,skip_existed)
     arguments
         start(1,1) datetime
         stop(1,1) datetime
@@ -25,4 +25,4 @@ function create_clms(start,stop,step,skip_existed)
         disp("正在处理："+string(time,'yyyyMMddHH'))
         create_single_clm(time);
     end
-    merge_clms(times);
+    filenames=merge_clms(times);

@@ -57,13 +57,28 @@ function roms_create_rivers_core(roms)
     netcdf.putAtt(nc,id,'long_name','river runoff salinity');
     netcdf.putAtt(nc,id,'time','river_time');
 
-    for i=1:numel(roms.rivers.dye)
-        var_name=['river_dye_',num2str(i,'%02d')];
-        id = netcdf.defVar(nc,var_name,'double',[river_id,s_rho_id,river_time_id]);
-        netcdf.putAtt(nc,id,'long_name',var_name);
-        netcdf.putAtt(nc,id,'units','kilogram meter-3');
-        netcdf.putAtt(nc,id,'time','river_time');
 
+    for i=1:numel(roms.rivers.dye)
+        if roms.tracer.age
+            var_name=['river_dye_',num2str(i*2-1,'%02d')];
+            id = netcdf.defVar(nc,var_name,'double',[river_id,s_rho_id,river_time_id]);
+            netcdf.putAtt(nc,id,'long_name',var_name);
+            netcdf.putAtt(nc,id,'units','kilogram meter-3');
+            netcdf.putAtt(nc,id,'time','river_time');
+
+            var_name=['river_dye_',num2str(i*2,'%02d')];
+            id = netcdf.defVar(nc,var_name,'double',[river_id,s_rho_id,river_time_id]);
+            netcdf.putAtt(nc,id,'long_name',var_name);
+            netcdf.putAtt(nc,id,'units','second');
+            netcdf.putAtt(nc,id,'time','ocean_time');
+            netcdf.putAtt(nc,id,'field',[var_name,', scalar, series']);
+        else
+            var_name=['river_dye_',num2str(i,'%02d')];
+            id = netcdf.defVar(nc,var_name,'double',[river_id,s_rho_id,river_time_id]);
+            netcdf.putAtt(nc,id,'long_name',var_name);
+            netcdf.putAtt(nc,id,'units','kilogram meter-3');
+            netcdf.putAtt(nc,id,'time','river_time');
+        end
     end
     netcdf.close(nc)
 
@@ -79,7 +94,14 @@ function roms_create_rivers_core(roms)
     ncwrite(roms.input.rivers,'river_temp',roms.rivers.temp);
 
     for i=1:numel(roms.rivers.dye)
-        var_name=['river_dye_',num2str(i,'%02d')];
-        ncwrite(roms.input.rivers,var_name,roms.rivers.dye{i});
+        if roms.tracer.age
+            var_name=['river_dye_',num2str(i*2-1,'%02d')];
+            ncwrite(roms.input.rivers,var_name,roms.rivers.dye{i});
+            var_name=['river_dye_',num2str(i*2,'%02d')];
+            ncwrite(roms.input.rivers,var_name,roms.rivers.ages{i});
+        else
+            var_name=['river_dye_',num2str(i,'%02d')];
+            ncwrite(roms.input.rivers,var_name,roms.rivers.dye{i});
+        end
     end
 end

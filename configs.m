@@ -34,15 +34,15 @@ function configs %(type)
     %纬度范围
     roms.grid.latitude=[29.86,31.13];
     %网格数量，与in文件Lm和Mm的相同，比rho、xi_v、eta_u少2，比xi_u、eta_v、psi少1
-    roms.grid.size=[158,118];
+    roms.grid.size=[200,140];
     %垂向分层
     roms.grid.N           = 5;
     %地形跟随坐标θs参数
-    roms.grid.theta_s     =  8;
+    roms.grid.theta_s     =  0;
     %地形跟随坐标θb参数
-    roms.grid.theta_b     =  4;
+    roms.grid.theta_b     =  0;
     %地形跟随坐标最小值
-    roms.grid.Tcline      = 20;
+    roms.grid.Tcline      = 1e5;
     roms.grid.Hmin      =5;
     %地形跟随坐标Vtransform参数
     roms.grid.Vtransform  =  2;
@@ -131,17 +131,19 @@ function configs %(type)
     %SWAN数据
     swan.multi_1_glo_30m='data';
     %% 被动示踪剂
-    %if type=="rivers" || type=="tracer"
     %示踪剂数量（变量的数量）
     roms.tracer.count=3;
+    %是否启用示踪剂平均年龄（需要定义MEAN_AGE）
+    roms.tracer.age=true;
     %示踪剂的密度
     roms.tracer.densities=cell(roms.tracer.count,1);
+    %示踪剂的平均年龄
+    roms.tracer.ages=cell(roms.tracer.count,1);
     for i=1:numel(roms.tracer.densities)
         roms.tracer.densities{i}=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
+        roms.tracer.ages{i}=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
     end
-    %end
     %% 河流
-    %if type=="rivers"
     %河流数量
     roms.rivers.count=1;
     %河流的流向，0为u方向，1为v方向，2为w方向
@@ -160,11 +162,13 @@ function configs %(type)
     roms.rivers.salt=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
     %被动示踪剂数据，数量应和roms.tracer.count相同。
     roms.rivers.dye=cell(roms.tracer.count,1);
+    %被动示踪剂初始年龄，数量应和roms.tracer.count相同。
+    roms.rivers.ages=cell(roms.tracer.count,1);
 
     for i=1:numel(roms.rivers.dye)
         roms.rivers.dye{i}=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
+        roms.rivers.ages{i}=ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
     end
-    %end
 
     %% SWAN强迫
     %分辨率
@@ -198,9 +202,9 @@ function configs_check(roms,swan)
     is_size_of(roms.grid.N,1)
     is_positive_integer(roms.grid.N)
     is_size_of(roms.grid.theta_s,1)
-    is_positive(roms.grid.theta_s)
+    is_zero_or_positive(roms.grid.theta_s)
     is_size_of(roms.grid.theta_b,1)
-    is_positive(roms.grid.theta_b)
+    is_zero_or_positive(roms.grid.theta_b)
     is_size_of(roms.grid.Tcline,1)
     is_positive(roms.grid.Tcline)
     is_in(roms.grid.Vtransform,[1,2])

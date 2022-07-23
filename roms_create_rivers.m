@@ -1,6 +1,6 @@
 configs
-roms.rivers.count=5;
-roms.rivers.time=[0:720];
+roms.rivers.count=6;
+roms.rivers.time=[0,720];
 roms.rivers.direction=ones(roms.rivers.count,1)*2;
 roms.rivers.location= [
     1      58   %七堡 钱塘江
@@ -8,6 +8,7 @@ roms.rivers.location= [
     53    77   %长山闸一号桥
     14    66   %上塘河排涝闸
     92    62   %四灶浦闸
+    130  20   %甬江
     %160 50
     ]-1;
 mask=ncread(roms.input.grid,'mask_rho');
@@ -18,19 +19,20 @@ for loc=roms.rivers.location'
 end
 roms.rivers.transport=ones(roms.rivers.count,numel(roms.rivers.time));
 roms.rivers.transport(1,:)=1403;
-roms.rivers.transport(2,:)=124;
+roms.rivers.transport(2,:)=145;
 roms.rivers.transport(3,:)=113; %汛期
 roms.rivers.transport(4,:)=80; %？
 roms.rivers.transport(5,:)=50; %？
+roms.rivers.transport(6,:)=115;
 
 roms.rivers.v_shape=ones(roms.rivers.count,roms.grid.N)/roms.grid.N;
 roms.rivers.temp=8*ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
 roms.rivers.salt=0.1*ones(roms.rivers.count,roms.grid.N,numel(roms.rivers.time));
 
 dyes=[
-    5.2   9   12   14    17 %COD
-    0.065  0.05   0.148  0.192  0.059 %总磷
-    2.04 2.5 3.52  2.26  0.91 %总氮
+    20/2.5   32/2.5   12   14    17 32/2.5 %COD
+    0.065  0.05  0.148  0.192  0.059 0.54  %总磷
+    2.04 2.5 3.52  2.26  0.91 3 %总氮
     ]/1000;
 
 roms.rivers.dye=cell(roms.tracer.count,1);

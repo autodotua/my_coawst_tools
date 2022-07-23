@@ -19,17 +19,19 @@ function roms_add_tracer_core(roms,svar,timevar)
             disp(['变量',var_name,'已创建'])
         end
 
-%         var_name=['dye_',num2str(i,'%02d'),'_age'];
-%         if(any(ismember( {info.Variables.Name},var_name)))
-%             disp(['变量',var_name,'已存在'])
-%         else
-%             dye_id=netcdf.defVar(nc,var_name,'double',[xrho_id,erho_id,sc_r_id,time_id]);
-%             netcdf.putAtt(nc,dye_id,'long_name',var_name);
-%             netcdf.putAtt(nc,dye_id,'units','second');
-%             netcdf.putAtt(nc,dye_id,'time','ocean_time');
-%             netcdf.putAtt(nc,dye_id,'field',[var_name,', scalar, series']);
-%             disp(['变量',var_name,'已创建'])
-%         end
+        if roms.tracer.age
+            var_name=['dye_',num2str(i,'%02d'),'_age'];
+            if(any(ismember( {info.Variables.Name},var_name)))
+                disp(['变量',var_name,'已存在'])
+            else
+                dye_id=netcdf.defVar(nc,var_name,'double',[xrho_id,erho_id,sc_r_id,time_id]);
+                netcdf.putAtt(nc,dye_id,'long_name',var_name);
+                netcdf.putAtt(nc,dye_id,'units','second');
+                netcdf.putAtt(nc,dye_id,'time','ocean_time');
+                netcdf.putAtt(nc,dye_id,'field',[var_name,', scalar, series']);
+                disp(['变量',var_name,'已创建'])
+            end
+        end
     end
 
     netcdf.close(nc)
@@ -39,8 +41,9 @@ function roms_add_tracer_core(roms,svar,timevar)
         var_name=['dye_',num2str(i,'%02d')];
         ncwrite(roms.input.initialization,var_name,roms.tracer.densities{i})
 
-%         var_name=['dye_',num2str(i,'%02d'),'_age'];
-%         temp=ones(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1)*1;
-%         ncwrite(roms.input.initialization,var_name,temp)
+        if roms.tracer.age
+            var_name=['dye_',num2str(i,'%02d'),'_age'];
+            ncwrite(roms.input.initialization,var_name,roms.tracer.ages{i})
+        end
     end
 end
