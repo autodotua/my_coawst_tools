@@ -134,14 +134,24 @@ function configs %(type)
     %示踪剂数量（变量的数量）
     roms.tracer.count=3;
     %是否启用示踪剂平均年龄（需要定义MEAN_AGE）
-    roms.tracer.age=true;
+    roms.tracer.age=false;
     %示踪剂的密度
     roms.tracer.densities=cell(roms.tracer.count,1);
     %示踪剂的平均年龄
     roms.tracer.ages=cell(roms.tracer.count,1);
+    roms.tracer.times=[0,roms.time.days];
+    roms.tracer.east=cell(roms.tracer.count,1);
+    roms.tracer.west=cell(roms.tracer.count,1);
+    roms.tracer.south=cell(roms.tracer.count,1);
+    roms.tracer.north=cell(roms.tracer.count,1);
+
     for i=1:numel(roms.tracer.densities)
         roms.tracer.densities{i}=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
         roms.tracer.ages{i}=zeros(roms.grid.size(1)+1,roms.grid.size(2)+1,roms.grid.N,1);
+        roms.tracer.east{i}=zeros(roms.grid.size(2),roms.grid.N,numel(roms.tracer.times));
+        roms.tracer.west{i}=zeros(roms.grid.size(2),roms.grid.N,numel(roms.tracer.times));
+        roms.tracer.south{i}=zeros(roms.grid.size(1),roms.grid.N,numel(roms.tracer.times));
+        roms.tracer.north{i}=zeros(roms.grid.size(1),roms.grid.N,numel(roms.tracer.times));
     end
     %% 河流
     %河流数量

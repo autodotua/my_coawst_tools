@@ -1,11 +1,18 @@
-function roms_add_tracer_core(roms,svar,timevar)
-    cd(roms.project_dir)
+function roms_add_tracer_core(roms)
+    d=cd(roms.project_dir);
+    roms_add_tracer_ini(roms)
+    roms_add_tracer_bdy(roms)
+    cd(d);
+end
+
+
+function roms_add_tracer_ini(roms)
     info=ncinfo(roms.input.initialization);
     nc=netcdf.open(roms.input.initialization,'WRITE');
     xrho_id=netcdf.inqDimID(nc,'xrho');
     erho_id=netcdf.inqDimID(nc,'erho');
-    sc_r_id=netcdf.inqDimID(nc,svar);
-    time_id=netcdf.inqDimID(nc,timevar);
+    sc_r_id=netcdf.inqDimID(nc,'sc_r');
+    time_id=netcdf.inqDimID(nc,'time');
     for i=1:roms.tracer.count
         var_name=['dye_',num2str(i,'%02d')];
         if(any(ismember( {info.Variables.Name},var_name)))
@@ -44,6 +51,87 @@ function roms_add_tracer_core(roms,svar,timevar)
         if roms.tracer.age
             var_name=['dye_',num2str(i,'%02d'),'_age'];
             ncwrite(roms.input.initialization,var_name,roms.tracer.ages{i})
+        end
+    end
+end
+
+
+function roms_add_tracer_bdy(roms)
+    info=ncinfo(roms.input.boundary);
+    nc=netcdf.open(roms.input.boundary,'WRITE');
+    xrho_dim=netcdf.inqDimID(nc,'xrho');
+    erho_dim=netcdf.inqDimID(nc,'erho');
+    sr_dim=netcdf.inqDimID(nc,'s_rho');
+
+    if(~any(ismember( {info.Variables.Name},'dye_time')))
+
+        dye_time_dim = netcdf.defDim(nc,'dye_time',length(roms.tracer.times));
+        dye_time_var = netcdf.defVar(nc,'dye_time','double',dye_time_dim);
+        netcdf.putAtt(nc,dye_time_var,'long_name','dye_time');
+        netcdf.putAtt(nc,dye_time_var,'units','days');
+        netcdf.putAtt(nc,dye_time_var,'field','dye_time, scalar, series');
+    end
+    for i=1:roms.tracer.count
+
+        var_name=['dye_east_',num2str(i,'%02d')];
+        if(any(ismember( {info.Variables.Name},var_name)))
+            disp(['变量',var_name,'已存在'])
+        else
+            var = netcdf.defVar(nc,var_name,'double',[erho_dim sr_dim dye_time_dim]);
+            netcdf.putAtt(nc,var,'long_name','dye concentration eastern boundary condition');
+            netcdf.putAtt(nc,var,'units','kilogram meter-3');
+            netcdf.putAtt(nc,var,'time','dye_time');
+            netcdf.putAtt(nc,var,'field',[var_name,', scalar, series']);
+            disp(['变量',var_name,'已创建'])
+        end
+
+        var_name=['dye_west_',num2str(i,'%02d')];
+        if(any(ismember( {info.Variables.Name},var_name)))
+            disp(['变量',var_name,'已存在'])
+        else
+            var = netcdf.defVar(nc,var_name,'double',[erho_dim sr_dim dye_time_dim]);
+            netcdf.putAtt(nc,var,'long_name','dye concentration western boundary condition');
+            netcdf.putAtt(nc,var,'units','kilogram meter-3');
+            netcdf.putAtt(nc,var,'time','dye_time');
+            netcdf.putAtt(nc,var,'field',[var_name,', scalar, series']);
+            disp(['变量',var_name,'已创建'])
+        end
+
+        if(any(ismember( {info.Variables.Name},var_name)))
+            disp(['变量',var_name,'已存在'])
+        else
+            var_name=['dye_south_',num2str(i,'%02d')];
+            var = netcdf.defVar(nc,var_name,'double',[xrho_dim sr_dim dye_time_dim]);
+            netcdf.putAtt(nc,var,'long_name','dye concentration southern boundary condition');
+            netcdf.putAtt(nc,var,'units','kilogram meter-3');
+            netcdf.putAtt(nc,var,'time','dye_time');
+            netcdf.putAtt(nc,var,'field',[var_name,', scalar, series']);
+            disp(['变量',var_name,'已创建'])
+        end
+
+        if(any(ismember( {info.Variables.Name},var_name)))
+            disp(['变量',var_name,'已存在'])
+        else
+            var_name=['dye_north_',num2str(i,'%02d')];
+            var = netcdf.defVar(nc,var_name,'double',[xrho_dim sr_dim dye_time_dim]);
+            netcdf.putAtt(nc,var,'long_name','dye concentration northern boundary condition');
+            netcdf.putAtt(nc,var,'units','kilogram meter-3');
+            netcdf.putAtt(nc,var,'time','dye_time');
+            netcdf.putAtt(nc,var,'field',[var_name,', scalar, series']);
+            disp(['变量',var_name,'已创建'])
+        end
+
+    end
+
+    netcdf.close(nc)
+
+    ncwrite(roms.input.boundary,'dye_time',roms.tracer.times+roms.time.start_julian)
+    for i=1:roms.tracer.count
+        for d=["east","west","south","north"]
+            disp(['正在写入变量',var_name])
+            var_name=['dye_',char(d),'_',num2str(i,'%02d')];
+            var=eval("roms.tracer."+d+"{i}");
+            ncwrite(roms.input.boundary,var_name,var)
         end
     end
 end

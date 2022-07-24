@@ -18,7 +18,7 @@ files=create_clms(start,stop,step,skip_existed);
 create_bdy(roms.input.climatology,roms.input.boundary,roms_grid_info);
 updatinit_coawst_mw("clm_"+string(start,'yyyyMMddHH')+".nc", roms_grid_info, ...
     roms.input.initialization, roms.project_dir, datenum(roms.time.start));
-roms_add_tracer
+roms_add_tracer 
 for file=files
     delete(file)
 end
