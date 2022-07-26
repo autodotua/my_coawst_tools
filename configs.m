@@ -43,6 +43,7 @@ function configs %(type)
     roms.grid.theta_b     =  0;
     %地形跟随坐标最小值
     roms.grid.Tcline      = 1e5;
+    %最小深度值
     roms.grid.Hmin      =5;
     %地形跟随坐标Vtransform参数
     roms.grid.Vtransform  =  2;
